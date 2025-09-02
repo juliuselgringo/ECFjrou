@@ -3,7 +3,7 @@ package training.afpa.sparadrap.model;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 
 public class Customer extends Person {
 
@@ -12,21 +12,37 @@ public class Customer extends Person {
     private Mutual mutual;
     private Doctor doctor;
 
-    private static final String regexSocialSecurityId = "^[12]\\d{2}(0[1-9]|1[0-2])\\d{2}\\d{3}\\d{3}\\d{3}$\n";
+    private static final String regexSocialSecurityId = "[12]\\d{2}(0[1-9]|1[0-2])\\d{2}\\d{3}\\d{3}\\d{2}";
+    public static ArrayList<Customer> customersList = new ArrayList<>();
 
     /**
      * CONSTRUCTOR
      * @param socialSecurityId String
-     * @param dateOfBirth Date
+     * @param dateOfBirth String
      * @param mutual Mutual
      * @param doctor Doctor
      * @throws InputException
      */
     public Customer(String firstName, String lastName, Contact contact,String socialSecurityId,
-                    LocalDate dateOfBirth, Mutual mutual, Doctor doctor) throws InputException {
+                    String dateOfBirth, Mutual mutual, Doctor doctor) throws InputException {
         super(firstName, lastName, contact);
         setSocialSecurityId(socialSecurityId);
         setDateOfBirth(dateOfBirth);
+        this.mutual =  mutual;
+        this.doctor = doctor;
+        customersList.add(this);
+        this.doctor.setDoctorCustomersList(this);
+    }
+
+    /**
+     * CONSTRUCTOR
+     * @param firstName String
+     * @param lastName String
+     * @param contact Contact
+     * @throws InputException
+     */
+    public Customer(String firstName, String lastName, Contact contact) throws InputException {
+        super(firstName, lastName, contact);
     }
 
     /**
@@ -66,16 +82,41 @@ public class Customer extends Person {
      * @param dateOfBirth LocalDate
      * @throws InputException
      */
-    public void setDateOfBirth(LocalDate dateOfBirth) throws InputException {
-        if(dateOfBirth == null) {
+    public void setDateOfBirth(String dateOfBirth) throws InputException {
+        LocalDate localDateOfBirth = LocalDate.parse(dateOfBirth.trim());
+        if(localDateOfBirth == null) {
             throw new InputException("dateOfBirth cannot be null");
-        } else if (dateOfBirth.isAfter(LocalDate.now())) {
+        } else if (localDateOfBirth.isAfter(LocalDate.now())) {
             throw new InputException("dateOfBirth is after now");
         }else{
-            this.dateOfBirth = dateOfBirth;
+            this.dateOfBirth = localDateOfBirth;
         }
     }
 
+    /**
+     * GETTER Mutual
+     * @return Mutual
+     */
+    public Mutual getMutual() {
+        return this.mutual;
+    }
 
+    /**
+     * GETTER Doctor
+     * @return Doctor
+     */
+    public Doctor getDoctor() {
+        return this.doctor;
+    }
 
+    /**
+     * TO STRING
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return "Client{ prénom: " + getFirstName() + ", nom: " + getLastName() +
+                ", date de naissance: " + getDateOfBirth() + ", \ncoordonnées: " + this.getContact() +
+                ", \nmutuelle: " + this.getMutual() + ", \ndocteur: " + this.getDoctor() + "\n\n}";
+    }
 }

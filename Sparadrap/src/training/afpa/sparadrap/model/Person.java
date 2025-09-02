@@ -18,8 +18,8 @@ public class Person {
      * @throws InputException 
      */
     public Person(String firstName, String lastName, Contact contact) throws InputException {
-        setFirstName(firstName);
-        setLastName(lastName);
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
         this.contact = contact;
     }
 
@@ -71,7 +71,23 @@ public class Person {
         }
     }
 
+    /**
+     * GETTER contact
+     * @return Contact
+     */
+    public Contact getContact() {
+        return this.contact;
+    }
 
+    /**
+     * TO STRING
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return "Person{" + "firstName: " + this.getFirstName() + ", lastName: " + this.getLastName() +
+                ", coordonnées: " + this.getContact() + '}';
+    }
 
 
 }

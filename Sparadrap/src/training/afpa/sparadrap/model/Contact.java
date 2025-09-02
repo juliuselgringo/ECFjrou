@@ -10,7 +10,7 @@ public class Contact {
     private String phone;
     private String email;
 
-    private final String regexAddress = "^\\d{1,5}(?:\\s(?:bis|ter|quater))?(?:[\\s,][a-zA-Z\\s\\,]{4,100})";
+    private final String regexAddress = "\\d{1,5}(?:\\s(?:bis|ter|quater))?(?:[\\s,][a-zA-Z\\s\\,]{4,100})";
     private final String regexPostalCode = "\\d{5}";
     private final String regexTown = "[A-Z][a-z]*(['\\s][A-Z][a-z]+)*?";
     private final String regexPhone = "([0-9][0-9]\\s){4}([0-9][0-9])";
@@ -41,7 +41,7 @@ public class Contact {
         address = address.trim();
         if(address == null || address.isEmpty()) {
             throw  new InputException("Address cannot be empty or null");
-        } else if (address.matches(regexAddress)) {
+        } else if (!address.matches(regexAddress)) {
             throw new InputException("L'adresse ne doit pas contenir d'accent, ni trait d'union");
         }else{
             this.address = address;
@@ -89,8 +89,8 @@ public class Contact {
         town = town.trim();
         if(town == null || town.isEmpty()) {
             throw  new InputException("Town cannot be empty or null");
-        } else if (town.matches(regexTown)) {
-            throw new InputException("L'adresse ne doit pas contenir d'accent, majuscule à chaque particule pour les noms composés");
+        } else if (!town.matches(regexTown)) {
+            throw new InputException("Le nomde la ville ne doit pas contenir d'accent mais doitavoir une majuscule à chaque particule pour les noms composés");
         }else{
             this.town = town;
         }
@@ -113,7 +113,7 @@ public class Contact {
         phone = phone.trim();
         if(phone == null || phone.isEmpty()) {
             throw  new InputException("Phone number cannot be empty or null");
-        } else if (phone.matches(regexPhone)) {
+        } else if (!phone.matches(regexPhone)) {
             throw new InputException("Saisie invalide, séparé tout les 2 chiffres par un espace ex: xx xx xx xx xx");
         }else{
             this.phone = phone;
@@ -137,10 +137,22 @@ public class Contact {
         email = email.trim();
         if(email == null || email.isEmpty()) {
             throw  new InputException("Email cannot be empty or null");
-        }else if(email.matches(regexEmail)) {
+        }else if(!email.matches(regexEmail)) {
             throw  new InputException("Email invalide");
         }else {
             this.email = email;
         }
     }
+
+    /**
+     * TO STRING
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return "Contact{adresse: " + this.getAddress() + ", code postal: " + this.getPostalCode() +
+                ", Ville: " + this.getTown() + ", phone: " + this.getPhone() + ", email: " + this.getEmail() + '}';
+    }
+
+
 }

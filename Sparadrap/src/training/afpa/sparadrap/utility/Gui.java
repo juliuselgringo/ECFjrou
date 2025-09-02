@@ -1,4 +1,4 @@
-package training.afpa.vue.swingGui;
+package training.afpa.sparadrap.utility;
 
 import javax.swing.*;
 import java.awt.*;

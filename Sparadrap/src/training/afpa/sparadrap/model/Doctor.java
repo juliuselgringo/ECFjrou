@@ -4,16 +4,25 @@ import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import java.util.ArrayList;
 
-public class Doctor {
+public class Doctor extends Person {
 
     private String agreementId;
-    private static ArrayList<Customer> doctorCustomersList;
+    private static ArrayList<Customer> doctorCustomersList = new ArrayList<>();
 
-    public Doctor(String firstName, String lastName, String address, String postalCode,
-                  String town, String phone, String email, String agreementId) throws InputException {
-        super();
+    public static ArrayList<Doctor> doctorsList = new ArrayList<Doctor>();
+
+    /**
+     * CONSTRUCTOR
+     * @param firstName String
+     * @param lastName String
+     * @param contact Contact
+     * @param agreementId String
+     * @throws InputException
+     */
+    public Doctor(String firstName, String lastName, Contact contact, String agreementId) throws InputException {
+        super(firstName, lastName, contact);
         setAgreementId(agreementId);
-
+        doctorsList.add(this);
     }
 
     /**
@@ -60,5 +69,16 @@ public class Doctor {
             }
         }
         this.doctorCustomersList.add(customer);
+    }
+
+    /**
+     * TO STRING
+     * @return String
+     */
+    @Override
+    public String toString() {
+        return "Docteur{ prénom: " + this.getFirstName() + ", nom: " + this.getLastName() +
+                ", coordonnées: " + this.getContact() + ", n° d'agréement: " + this.getAgreementId() +
+                "}";
     }
 }
