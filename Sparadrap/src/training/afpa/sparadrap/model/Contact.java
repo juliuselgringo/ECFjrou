@@ -150,8 +150,8 @@ public class Contact {
      */
     @Override
     public String toString() {
-        return "Contact{adresse: " + this.getAddress() + ", code postal: " + this.getPostalCode() +
-                ", Ville: " + this.getTown() + ", phone: " + this.getPhone() + ", email: " + this.getEmail() + '}';
+        return "\nContact{ Adresse: " + this.getAddress() + ", Code postal: " + this.getPostalCode() +
+                ", Ville: " + this.getTown() + ", \nTéléphone: " + this.getPhone() + ", Email: " + this.getEmail() + " }";
     }
 
 

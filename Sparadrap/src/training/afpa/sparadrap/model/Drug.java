@@ -202,4 +202,14 @@ public class Drug {
                 ", quantité: " + this.getQuantity() + ", underPrescription: " + this.isUnderPrescription() + "}";
     }
 
+    public static void stockUpdate(Drug drugToUpdate, int quantity) throws InputException {
+        for(Drug drug : drugsList){
+            if(drug.getName().equals(drugToUpdate.getName())){
+                drug.setQuantity(drug.getQuantity() - quantity);
+                return;
+            }
+        }
+        throw new InputException("Médicament introuvable");
+    }
+
 }

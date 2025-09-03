@@ -79,7 +79,7 @@ public class Mutual {
      */
     @Override
     public String toString() {
-        return "Mutuelle{ nom: " + this.getname() + ", coordonnées:  " +
-                this.getContact() + ", taux: " + this.getRate() + "}";
+        return "\nMutuelle{ Nom: " + this.getname() + ", \nCoordonnées:  " +
+                this.getContact() + ", \nTaux: " + this.getRate() + "}";
     }
 }

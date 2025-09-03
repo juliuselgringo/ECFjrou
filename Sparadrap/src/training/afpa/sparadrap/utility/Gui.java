@@ -144,9 +144,9 @@ public class Gui {
         return comboBox;
     }
 
-    public static JComboBox comboBoxMaker(JPanel panel, int positionX, int positionY){
+    public static JComboBox comboBoxMaker(JPanel panel, int positionX, int positionY, int width){
         JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.setBounds(positionX, positionY, 900, 20);
+        comboBox.setBounds(positionX, positionY, width, 20);
         panel.add(comboBox);
 
         return comboBox;

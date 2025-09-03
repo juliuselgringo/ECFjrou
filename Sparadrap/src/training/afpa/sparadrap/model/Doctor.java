@@ -77,9 +77,9 @@ public class Doctor extends Person {
      */
     @Override
     public String toString() {
-        return "\nDocteur{ prénom: " + this.getFirstName() + ", nom: " + this.getLastName() +
-                ", coordonnées: " + this.getContact() + ", n° d'agréement: " + this.getAgreementId() +
-                "}\n";
+        return "\nDocteur{ Prénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
+                ", \nCoordonnées: " + this.getContact() + ", N° d'agréement: " + this.getAgreementId() +
+                " }";
     }
 
 }

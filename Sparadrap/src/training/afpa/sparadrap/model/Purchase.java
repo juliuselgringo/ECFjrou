@@ -11,6 +11,7 @@ public class Purchase {
     private LocalDate purchaseDate;
     private Boolean withPrescription;
     private Map<Drug, Integer> purchaseDrugsQuantity = new HashMap<>();
+    private String[][] purchaseDateDrugsQuantities;
     private Prescription prescription;
 
     public static ArrayList<Purchase> purchasesHistory = new ArrayList<Purchase>();
@@ -76,6 +77,39 @@ public class Purchase {
         }
     }
 
+    /**
+     * GETTER purchaseDateDrugsQuantities
+     * @return String[][]
+     */
+    public String[][] getPurchaseDateDrugsQuantities() {
+        return this.purchaseDateDrugsQuantities;
+    }
+
+    /**
+     * SETTER purchaseDateDrugsQuantities
+     * @return String[][]
+     */
+    public void setPurchaseDateDrugsQuantities(){
+        String[][] purchaseDateDrugsQuantities = new String[this.purchaseDrugsQuantity.size()][4];
+        int i = 0;
+        for (Drug drug : this.purchaseDrugsQuantity.keySet()) {
+            purchaseDateDrugsQuantities[i][0] = this.getPurchaseDate().toString();
+            if(this.withPrescription) {
+                purchaseDateDrugsQuantities[i][1] = this.getPrescription().getCustomerLastName();
+            }else {
+                purchaseDateDrugsQuantities[i][1] = this.getWithPrescription().toString();
+            }
+            purchaseDateDrugsQuantities[i][2] = drug.getName();
+            i++;
+        }
+        i = 0;
+        for (Integer quantity : this.purchaseDrugsQuantity.values()) {
+            purchaseDateDrugsQuantities[i][3] = quantity.toString();
+            i++;
+        }
+
+        this.purchaseDateDrugsQuantities = purchaseDateDrugsQuantities;
+    }
 
     /**
      * TO STRING
@@ -92,21 +126,6 @@ public class Purchase {
             return "\nachat{ date: " + this.getPurchaseDate().toString() +
                     ",\n liste des médicament: " + this.getPurchaseDrugsQuantity().toString() + " }";
         }
-    }
-
-    /**
-     * CREER UNE MATRICE DES ACHATS
-     * @return String[][]
-     */
-    public static String[][] createPurchaseMatrice(){
-        String[][] purchaseMatrice = new String[purchasesHistory.size()][2];
-        int i = 0;
-        for (Purchase purchase : purchasesHistory) {
-            purchaseMatrice[i][0] = purchase.getPurchaseDate().toString();
-            purchaseMatrice[i][1] = purchase.getPurchaseDrugsQuantity().toString();
-            i++;
-        }
-        return purchaseMatrice;
     }
 
     public String purchaseDrugsQuantityToString(){
@@ -129,4 +148,5 @@ public class Purchase {
         }
         return Arrays.toString(drugsQuantitiesList);
     }
+
 }

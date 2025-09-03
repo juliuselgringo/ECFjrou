@@ -69,11 +69,18 @@ public class Main {
         //_______________________________ACHATS_________________________________________
         Purchase purchase1 = new Purchase(false);
         purchase1.setPurchaseDrugsQuantity(Drug.drugsList.get(0),1);
- 
+        purchase1.setPurchaseDrugsQuantity(Drug.drugsList.get(3),1);
+        purchase1.setPurchaseDrugsQuantity(Drug.drugsList.get(6),1);
+        purchase1.setPurchaseDateDrugsQuantities();
+
+
         Purchase purchase2 = new Purchase(true);
         Prescription prescription2 = new Prescription("2025-08-29", "Martin","Petit");
         purchase2.setPrescrition(prescription2);
         purchase2.setPurchaseDrugsQuantity(Drug.drugsList.get(2),1);
+        purchase2.setPurchaseDrugsQuantity(Drug.drugsList.get(4),1);
+        purchase2.setPurchaseDrugsQuantity(Drug.drugsList.get(8),1);
+        purchase2.setPurchaseDateDrugsQuantities();
 
     }
 }
