@@ -115,8 +115,8 @@ public class Customer extends Person {
      */
     @Override
     public String toString() {
-        return "Client{ prénom: " + getFirstName() + ", nom: " + getLastName() +
+        return "\nClient{ prénom: " + getFirstName() + ", nom: " + getLastName() +
                 ", date de naissance: " + getDateOfBirth() + ", \ncoordonnées: " + this.getContact() +
-                ", \nmutuelle: " + this.getMutual() + ", \ndocteur: " + this.getDoctor() + "\n\n}";
+                ", \nmutuelle: " + this.getMutual() + ", \ndocteur: " + this.getDoctor() + "\n}";
     }
 }

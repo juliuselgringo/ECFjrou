@@ -4,18 +4,23 @@ package training.afpa.sparadrap.controller;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.model.*;
 import training.afpa.sparadrap.view.ProgramSwing;
+import training.afpa.sparadrap.utility.Display;
 
 public class Main {
 
     public static void main(String[] args) throws InputException {
+        Main.developpmentDataInput();
         //Main.fuctionnalTestObjectCreation();
         ProgramSwing.generalMenu();
-
+        /*
+        String test = Purchase.createPurchaseMatrice()[0][1];
+        Display.print("test matrice :" + test);
+        Display.print(Purchase.purchasesHistory.toString());
+        */
     }
 
     private static void fuctionnalTestObjectCreation() throws InputException {
-        Main.developpmentDataInput();
-        System.out.println(Purchase.getPurchaseDrugsQuantity());
+
 
     }
 
@@ -50,7 +55,7 @@ public class Main {
                 "1975-12-20", mgenLyon, maMarLyon);
 
         //_______________________MEDICAMENTS___________________________
-        Drug dafalgan = new Drug("Dafalgan","Analgesiques et Anti-inflammatoires",9.99, "2024-12-03", 50,false);
+        Drug dafalgan = new Drug("Dafalgan","Analgesiques et Anti-inflammatoires",9.99, "2024-12-03", 50, false);
         Drug amoxicilline = new Drug("Amoxicilline", "Antibiotiques et Antibacteriens", 12.50, "2025-01-15", 30, true);
         Drug ventoline = new Drug("Ventoline", "Immunologie et Allergologie", 15.75, "2025-01-20", 20, true);
         Drug levothyrox = new Drug("Levothyrox", "Endocrinologie", 8.90, "2025-02-05", 90, false);
@@ -64,8 +69,11 @@ public class Main {
         //_______________________________ACHATS_________________________________________
         Purchase purchase1 = new Purchase(false);
         purchase1.setPurchaseDrugsQuantity(Drug.drugsList.get(0),1);
-
-        Purchase purchase2 = new Purchase(false);
+ 
+        Purchase purchase2 = new Purchase(true);
+        Prescription prescription2 = new Prescription("2025-08-29", "Martin","Petit");
+        purchase2.setPrescrition(prescription2);
         purchase2.setPurchaseDrugsQuantity(Drug.drugsList.get(2),1);
+
     }
 }

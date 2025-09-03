@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Doctor extends Person {
 
     private String agreementId;
-    private static ArrayList<Customer> doctorCustomersList = new ArrayList<>();
+    private ArrayList<Customer> doctorCustomersList = new ArrayList<>();
 
     public static ArrayList<Doctor> doctorsList = new ArrayList<Doctor>();
 
@@ -53,8 +53,8 @@ public class Doctor extends Person {
      * GETTER doctorCustomersList
      * @return ArrayList
      */
-    public static ArrayList<Customer> getDoctorCustomersList() {
-        return doctorCustomersList;
+    public ArrayList<Customer> getDoctorCustomersList() {
+        return this.doctorCustomersList;
     }
 
     /**
@@ -77,8 +77,9 @@ public class Doctor extends Person {
      */
     @Override
     public String toString() {
-        return "Docteur{ prénom: " + this.getFirstName() + ", nom: " + this.getLastName() +
+        return "\nDocteur{ prénom: " + this.getFirstName() + ", nom: " + this.getLastName() +
                 ", coordonnées: " + this.getContact() + ", n° d'agréement: " + this.getAgreementId() +
-                "}";
+                "}\n";
     }
+
 }

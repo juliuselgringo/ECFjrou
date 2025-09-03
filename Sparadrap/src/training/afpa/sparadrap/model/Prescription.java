@@ -3,7 +3,6 @@ package training.afpa.sparadrap.model;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public class Prescription {
     public Prescription(String prescriptionDateIn, String doctorLastNameIn, String customerLastNameIn) throws InputException {
         this.setPrescriptionDate(prescriptionDateIn);
         this.setDoctorLastName(doctorLastNameIn);
-        this.setCustomerLastName(doctorLastNameIn);
+        this.setCustomerLastName(customerLastNameIn);
     }
 
     /**
@@ -41,11 +40,11 @@ public class Prescription {
      * @throws InputException
      */
     public void setPrescriptionDate(String prescriptionDateIn) throws InputException {
-        prescriptionDate = LocalDate.parse(prescriptionDateIn);
-        if (prescriptionDate.isAfter(LocalDate.now())) {
+        LocalDate prescriptionDateInLD = LocalDate.parse(prescriptionDateIn);
+        if (prescriptionDateInLD.isAfter(LocalDate.now())) {
             throw new InputException("La date de prescription ne peut être après la date d'aujourd'hui!");
         }else {
-            this.prescriptionDate = prescriptionDate;
+            this.prescriptionDate = prescriptionDateInLD;
         }
     }
 
@@ -63,13 +62,15 @@ public class Prescription {
      * @throws InputException
      */
     public void setDoctorLastName(String doctorLastNameIn) throws InputException {
-        doctorLastName = doctorLastNameIn.trim();
+        String doctorLastNameInSt = doctorLastNameIn.trim();
         for (Doctor doctor : Doctor.doctorsList){
-            if (doctor.getLastName().equals(doctorLastNameIn)){
-                doctorLastName = doctor.getLastName();
-            }else {
-                throw new InputException("Ce medecin n'est pas enregistré.");
+            if (doctor.getLastName().equals(doctorLastNameInSt)){
+               this.doctorLastName = doctorLastNameInSt;
+               return;
             }
+        }
+        if(this.doctorLastName == null){
+            throw new InputException("Ce medecin n'est pas enregistré.");
         }
     }
 
@@ -87,13 +88,15 @@ public class Prescription {
      * @throws InputException
      */
     public void setCustomerLastName(String customerLastNameIn) throws InputException {
-        customerLastName = customerLastNameIn.trim();
+        String customerLastNameInTrimed = customerLastNameIn.trim();
         for (Customer customer : Customer.customersList){
-            if (customer.getLastName().equals(customerLastNameIn)){
-                customerLastName = customer.getLastName();
-            }else {
-                throw new InputException("Ce client n'est pas enregistré.");
+            if (customer.getLastName().equals(customerLastNameInTrimed)){
+                this.customerLastName = customerLastNameInTrimed;
+                return;
             }
+        }
+        if(this.customerLastName == null){
+            throw new InputException("Ce client n'est pas enregistré.");
         }
     }
 
@@ -109,7 +112,7 @@ public class Prescription {
      * SETTER drugsPrescritionList
      * @param drug Drug
      */
-    public void setDrugsPrescriptionsList(Drug drug, int quantity) {
+    public void setDrugsQuantityPrescriptionsList(Drug drug, int quantity) {
         this.drugsQuantityPrescriptionsList.put(drug,quantity);
     }
 

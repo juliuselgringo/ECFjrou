@@ -13,5 +13,8 @@ public class ProgramSwing {
         purchaseMenu.addActionListener(e -> {PurchaseSwing.purchase();});
         JButton purchaseHistory = Gui.buttonMaker(panel, "Historique des Achats", 40);
         purchaseHistory.addActionListener(e -> {PurchaseSwing.history();});
+
+        JButton exitButton = Gui.buttonMaker(panel, "Quitter", 160);
+        exitButton.addActionListener(e -> System.exit(0));
     }
 }

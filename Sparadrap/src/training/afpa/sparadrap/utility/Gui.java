@@ -24,9 +24,9 @@ public class Gui {
      * CREER UN POP UP
      * @return JFrame
      */
-    public static JFrame setPopUpFrame(){
+    public static JFrame setPopUpFrame(int width, int height){
         JFrame frame = new JFrame();
-        frame.setSize(800,600);
+        frame.setSize(width,height);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
@@ -71,9 +71,9 @@ public class Gui {
      * @param height int
      * @return JTextArea
      */
-    public static JTextArea textAreaMaker(JPanel panel, String sentence,int positionX, int positionY,int height){
+    public static JTextArea textAreaMaker(JPanel panel, String sentence,int positionX, int positionY,int width, int height){
         JTextArea textArea = new JTextArea(sentence);
-        textArea.setBounds(positionX, positionY, 400, height);
+        textArea.setBounds(positionX, positionY, width, height);
         textArea.setEditable(false);
         panel.add(textArea);
 

@@ -1,4 +1,4 @@
-package training.afpa.vue.terminal;
+package training.afpa.sparadrap.utility;
 
 public class Display {
 

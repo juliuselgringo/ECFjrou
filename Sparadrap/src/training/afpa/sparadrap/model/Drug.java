@@ -60,6 +60,7 @@ public class Drug {
         this.setPrice(price);
         this.setProductionDate(productDate);
         this.setQuantity(quantity);
+        this.setUnderPrescription(underPrescription);
         drugsList.add(this);
     }
 
@@ -155,7 +156,7 @@ public class Drug {
      * @return Boolean
      */
     public Boolean isUnderPrescription() {
-        return underPrescription;
+        return this.underPrescription;
     }
 
     /**
