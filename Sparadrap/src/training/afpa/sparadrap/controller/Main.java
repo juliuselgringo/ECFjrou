@@ -71,7 +71,7 @@ public class Main {
         purchase1.setPurchaseDrugsQuantity(Drug.drugsList.get(0),1);
         purchase1.setPurchaseDrugsQuantity(Drug.drugsList.get(3),1);
         purchase1.setPurchaseDrugsQuantity(Drug.drugsList.get(6),1);
-        purchase1.setPurchaseDateDrugsQuantities();
+        purchase1.setPurchaseDetails();
 
 
         Purchase purchase2 = new Purchase(true);
@@ -80,7 +80,24 @@ public class Main {
         purchase2.setPurchaseDrugsQuantity(Drug.drugsList.get(2),1);
         purchase2.setPurchaseDrugsQuantity(Drug.drugsList.get(4),1);
         purchase2.setPurchaseDrugsQuantity(Drug.drugsList.get(8),1);
-        purchase2.setPurchaseDateDrugsQuantities();
+        purchase2.setPurchaseDetails();
+
+        Purchase purchase3 = new Purchase(true);
+        Prescription prescription3 = new Prescription("2025-08-12", "Dupont","Lefevre");
+        purchase3.setPrescrition(prescription3);
+        purchase3.setPurchaseDrugsQuantity(Drug.drugsList.get(2),1);
+        purchase3.setPurchaseDrugsQuantity(Drug.drugsList.get(4),1);
+        purchase3.setPurchaseDrugsQuantity(Drug.drugsList.get(8),1);
+        purchase3.setPurchaseDetails();
+
+        Purchase purchase4 = new Purchase("2025-07-07",true);
+        Prescription prescription4 = new Prescription("2025-06-22", "Dupont","Lefevre");
+        purchase4.setPrescrition(prescription4);
+        purchase4.setPurchaseDrugsQuantity(Drug.drugsList.get(2),1);
+        purchase4.setPurchaseDrugsQuantity(Drug.drugsList.get(4),1);
+        purchase4.setPurchaseDrugsQuantity(Drug.drugsList.get(8),1);
+        purchase4.setPurchaseDetails();
+
 
     }
 }

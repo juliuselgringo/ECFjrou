@@ -5,9 +5,17 @@ import training.afpa.sparadrap.model.*;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class PurchaseSwing {
 
+    public static final String[] purchaseHistoryTableHeaders = new String []{"Date","Numéro de commande", "Nom du clients", "Nom du médicament", "Quantite"};
+
+    /**
+     * FENETRE DE CREATION D ACHAT AVEC OU SANS PRESCRIPTION
+     */
     public static void purchase() {
         JFrame frame = Gui.setFrame();
         Gui.setPanel(frame);
@@ -15,8 +23,8 @@ public class PurchaseSwing {
         int response = JOptionPane.showConfirmDialog(null, "Achat avec prescription?",
                 "Confirmation",JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
-            Purchase newPrescriptionPurchase = new Purchase(true);
-            createPrescriptionPurchase(newPrescriptionPurchase);
+
+            createPrescriptionPurchase();
             frame.dispose();
         }else {
             Purchase newPurchase = new Purchase(false);
@@ -26,7 +34,10 @@ public class PurchaseSwing {
 
     }
 
-    public static void createPrescriptionPurchase(Purchase newPrescriptionPurchase) {
+    /**
+     * CREER UN FORMULAIRE POUR UNE PRESCRIPTION
+     */
+    public static void createPrescriptionPurchase() {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
@@ -47,6 +58,7 @@ public class PurchaseSwing {
             Customer customer = (Customer) customerBox.getSelectedItem();
 
             doctorBox.addActionListener(ev ->{
+                Purchase newPrescriptionPurchase = new Purchase(true);
                 Doctor doctor = (Doctor) doctorBox.getSelectedItem();
                 String prescriptionDate = dateField.getText();
                 try {
@@ -62,6 +74,10 @@ public class PurchaseSwing {
 
     }
 
+    /**
+     * CREER UNE FENETRE D ACHAT
+     * @param newPurchase
+     */
     public static void createPurchase(Purchase newPurchase) {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
@@ -82,33 +98,49 @@ public class PurchaseSwing {
             Drug drugToAdd;
             drugToAdd = (Drug)drugBox.getSelectedItem();
             int quantity = 0;
-            quantity = Integer.parseInt(quantityField.getText());
-            newPurchase.setPurchaseDrugsQuantity(drugToAdd, quantity);
-            createDisplayPurchaseDrugs(newPurchase);
             try {
-                Drug.stockUpdate(drugToAdd, quantity);
+                quantity = Integer.parseInt(quantityField.getText());
+                if (quantity <= 0) {
+                    throw new InputException("La quantité est invalide.");
+                }
+                newPurchase.setPurchaseDrugsQuantity(drugToAdd, quantity);
+
+                try {
+                    Drug.stockUpdate(drugToAdd, quantity);
+                    createDisplayPurchaseDrugs(newPurchase);
+                }catch (InputException ie){
+                    JOptionPane.showMessageDialog(null, "Erreur de saisie ou quantité indisponible: " + ie.getMessage(),
+                            "Erreur",JOptionPane.ERROR_MESSAGE);
+                }
             }catch (InputException ie){
-                JOptionPane.showMessageDialog(null, "Erreur de saisie ou quantité indisponible: " + ie.getMessage(),
-                        "Erreur",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null,ie.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
             }
+
         });
 
         saveButton.addActionListener(e -> {
-            newPurchase.setPurchaseDateDrugsQuantities();
+            newPurchase.setPurchaseDetails();
             JOptionPane.showMessageDialog(null, "La commande a été enregistré avec succès");
             frame.dispose();
         });
 
-        JButton backButton = Gui.buttonMaker(panel,"Retour",220);
-        backButton.addActionListener(e -> frame.dispose());
+        JButton cancelButton = Gui.buttonMaker(panel,"Annuler",220);
+        cancelButton.addActionListener(e ->  {
+            newPurchase.deletePurchaseFromHistory();
+            frame.dispose();
+        });
     }
 
+    /**
+     * CREER UNE FENETRE QUI AFFICHE LE CONTENU D UN ACHAT
+     * @param newPurchase
+     */
     public static void createDisplayPurchaseDrugs(Purchase newPurchase) {
         JFrame frame = Gui.setPopUpFrame(1000,800);
         JPanel panel = Gui.setPanel(frame);
-        String display = "";
-        display = newPurchase.purchaseDrugsQuantityToString();
-        Gui.textAreaMaker(panel, display,10,10, 1000,400);
+        newPurchase.setPurchaseDetails();
+        String[][] display = newPurchase.getPurchaseDetails();
+        Gui.tableMaker(panel,display,purchaseHistoryTableHeaders,10,10,800,200);
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",440);
         backButton.addActionListener(e -> {
@@ -118,34 +150,90 @@ public class PurchaseSwing {
     }
 
 
+    /**
+     * PAGE HISTORIQUE DES ACHATS
+     */
     public static void history() {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
-        final String[] purchaseHistoryTableHeaders = new String []{"Date", "Nom du clients", "Nom du médicament", "Quantite"};
 
-        JComboBox historyBox = Gui.comboBoxMaker(panel,10,10,1500);
+
+        Gui.labelMaker(panel, "Sélectionner une commande à afficher:",10,10);
+        JComboBox historyBox = Gui.comboBoxMaker(panel,10,40,1500);
         for (Purchase purchase : Purchase.purchasesHistory){
             historyBox.addItem(purchase);
         }
 
-        JButton backButton = Gui.buttonMaker(panel,"Retour",190);
+        historyBox.addActionListener(e -> {
+            Purchase purchase = (Purchase)historyBox.getSelectedItem();
+            consultAPurchase(purchase);
+        });
+
+        Gui.labelMaker(panel, "Consulter les commandes d'une période:):",10,70);
+        Gui.labelMaker(panel, "Saisissez une date de début (AAAA-MM-JJ):",10,100);
+        JTextField startDateField = Gui.textFieldMaker(panel,10,130);
+        Gui.labelMaker(panel, "Saisissez une date de fin (AAAA-MM-JJ):",10,160);
+        JTextField endDateField = Gui.textFieldMaker(panel,10,190);
+        JButton searchButton = Gui.buttonMaker(panel,"Rechercher par période",220);
+
+        searchButton.addActionListener(e -> {
+            try{
+                LocalDate startDate =  LocalDate.parse(startDateField.getText());
+                LocalDate endDate =  LocalDate.parse(endDateField.getText());
+                if(endDate.isBefore(startDate)){
+                    throw new InputException("La période n'est pas valide");
+
+                }
+                consultPurchasesByPeriod(startDate, endDate);
+            }catch(InputException ie){
+                JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
+            }
+
+
+        });
+
+        JButton backButton = Gui.buttonMaker(panel,"Retour",280);
         backButton.addActionListener(ev -> frame.dispose());
 
-        historyBox.addActionListener(e -> {
-            JFrame frame2 = Gui.setPopUpFrame(1400,800);
-            JPanel panel2 = Gui.setPanel(frame2);
-            Purchase purchase = (Purchase)historyBox.getSelectedItem();
-            String[][] purchaseHistoryMatrice = purchase.getPurchaseDateDrugsQuantities();
+    }
+
+    public static void consultAPurchase(Purchase purchase) {
+        JFrame frame2 = Gui.setPopUpFrame(1400,800);
+        JPanel panel2 = Gui.setPanel(frame2);
+
+        String[][] purchaseHistoryMatrice = purchase.getPurchaseDetails();
+
+        Gui.tableMaker(panel2, purchaseHistoryMatrice,
+                purchaseHistoryTableHeaders,10,40,1200,200);
+
+        JButton backButton2 = Gui.buttonMaker(panel2,"Retour",240);
+        backButton2.addActionListener(ev -> frame2.dispose());
+    }
+
+    public static void consultPurchasesByPeriod(LocalDate startDate, LocalDate endDate) {
+        JFrame frame2 = Gui.setPopUpFrame(1600,800);
+        JPanel panel2 = Gui.setPanel(frame2);
+
+        ArrayList<Purchase> purchaseListToDisplay = Purchase.searchPurchaseByPeriod(startDate, endDate);
+        Gui.labelMaker(panel2,"Sélectionner une commande:",10,10);
+        JComboBox purchaseBox = Gui.comboBoxMaker(panel2,10,40,1500);
+        for(Purchase purchase : purchaseListToDisplay){
+            purchaseBox.addItem(purchase);
+        }
+
+        purchaseBox.addActionListener(e -> {
+            Purchase purchase = (Purchase)purchaseBox.getSelectedItem();
+            String[][] purchaseHistoryMatrice = purchase.getPurchaseDetails();
 
             Gui.tableMaker(panel2, purchaseHistoryMatrice,
                     purchaseHistoryTableHeaders,10,40,1200,200);
-
-            JButton backButton2 = Gui.buttonMaker(panel2,"Retour",240);
-            backButton2.addActionListener(ev -> frame2.dispose());
         });
 
+        JButton backButton2 = Gui.buttonMaker(panel2,"Retour",240);
+        backButton2.addActionListener(ev -> frame2.dispose());
     }
+
 
 
 }

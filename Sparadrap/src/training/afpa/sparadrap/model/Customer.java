@@ -115,8 +115,10 @@ public class Customer extends Person {
      */
     @Override
     public String toString() {
-        return "\nClient{ Prénom: " + getFirstName() + ", Nom: " + getLastName() +
-                ", Date de naissance: " + getDateOfBirth() + ", \nCoordonnées: " + this.getContact() +
-                ", \nMutuelle: " + this.getMutual() + ", \nDocteur: " + this.getDoctor() + " }";
+        return "Client \nPrénom: " + getFirstName() + ", Nom: " + getLastName() +
+                ", Date de naissance: " + getDateOfBirth() + ", " + this.getContact() +
+                "\nMutuelle: " + this.getMutual().getname() + " " + this.getMutual().getContact().getPostalCode() +
+                ", \nDocteur: " + this.getDoctor().getLastName() +
+                " Agreement: " + this.getDoctor().getAgreementId() + "\n";
     }
 }

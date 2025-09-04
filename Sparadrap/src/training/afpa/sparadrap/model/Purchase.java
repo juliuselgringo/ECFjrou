@@ -1,6 +1,7 @@
 package training.afpa.sparadrap.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,12 +10,14 @@ import java.util.Map;
 public class Purchase {
 
     private LocalDate purchaseDate;
+    private Integer purchaseNumber;
     private Boolean withPrescription;
     private Map<Drug, Integer> purchaseDrugsQuantity = new HashMap<>();
-    private String[][] purchaseDateDrugsQuantities;
+    private String[][] purchaseDetails;
     private Prescription prescription;
 
     public static ArrayList<Purchase> purchasesHistory = new ArrayList<Purchase>();
+    public static int incrementPurchaseNumber = 1;
 
     /**
      * CONSTRUCTOR
@@ -24,6 +27,20 @@ public class Purchase {
         this.purchaseDate = LocalDate.now();
         this.withPrescription = withPrescription;
         purchasesHistory.add(this);
+        this.purchaseNumber = incrementPurchaseNumber;
+        incrementPurchaseNumber++;
+    }
+
+    /**
+     * CONSTRUCTOR
+     * @param withPrescription
+     */
+    public Purchase(String purchaseDate, Boolean withPrescription) {
+        setPurchaseDate(purchaseDate);
+        this.withPrescription = withPrescription;
+        purchasesHistory.add(this);
+        this.purchaseNumber = incrementPurchaseNumber;
+        incrementPurchaseNumber++;
     }
 
 
@@ -33,6 +50,18 @@ public class Purchase {
      */
     public LocalDate getPurchaseDate() {
         return purchaseDate;
+    }
+
+    public  void setPurchaseDate(String purchaseDate) {
+        this.purchaseDate = LocalDate.parse(purchaseDate);
+    }
+
+    /**
+     * GETTER purchaseNumber
+     * @return Integer
+     */
+    public Integer getPurchaseNumber() {
+        return this.purchaseNumber;
     }
 
     /**
@@ -78,37 +107,38 @@ public class Purchase {
     }
 
     /**
-     * GETTER purchaseDateDrugsQuantities
+     * GETTER purchaseDetails
      * @return String[][]
      */
-    public String[][] getPurchaseDateDrugsQuantities() {
-        return this.purchaseDateDrugsQuantities;
+    public String[][] getPurchaseDetails() {
+        return this.purchaseDetails;
     }
 
     /**
      * SETTER purchaseDateDrugsQuantities
      * @return String[][]
      */
-    public void setPurchaseDateDrugsQuantities(){
-        String[][] purchaseDateDrugsQuantities = new String[this.purchaseDrugsQuantity.size()][4];
+    public void setPurchaseDetails(){
+        String[][] purchaseDetails = new String[this.purchaseDrugsQuantity.size()][5];
         int i = 0;
         for (Drug drug : this.purchaseDrugsQuantity.keySet()) {
-            purchaseDateDrugsQuantities[i][0] = this.getPurchaseDate().toString();
+            purchaseDetails[i][0] = this.getPurchaseDate().toString();
+            purchaseDetails[i][1] = this.getPurchaseNumber().toString();
             if(this.withPrescription) {
-                purchaseDateDrugsQuantities[i][1] = this.getPrescription().getCustomerLastName();
+                purchaseDetails[i][2] = this.getPrescription().getCustomerLastName();
             }else {
-                purchaseDateDrugsQuantities[i][1] = this.getWithPrescription().toString();
+                purchaseDetails[i][2] = "Anonyme (achat sans prescription)";
             }
-            purchaseDateDrugsQuantities[i][2] = drug.getName();
+            purchaseDetails[i][3] = drug.getName();
             i++;
         }
         i = 0;
         for (Integer quantity : this.purchaseDrugsQuantity.values()) {
-            purchaseDateDrugsQuantities[i][3] = quantity.toString();
+            purchaseDetails[i][4] = quantity.toString();
             i++;
         }
 
-        this.purchaseDateDrugsQuantities = purchaseDateDrugsQuantities;
+        this.purchaseDetails = purchaseDetails;
     }
 
     /**
@@ -117,17 +147,21 @@ public class Purchase {
      */
     @Override
     public String toString() {
+        String stringToReturn = "\nAchat{ Date: " + this.getPurchaseDate().toString() +
+                ", Numéro de commande: " + this.getPurchaseNumber();
         if(withPrescription) {
-            return "\nachat{ date: " + this.getPurchaseDate().toString() +
-                    ",\n liste des médicaments: " + this.getPurchaseDrugsQuantity().toString() +
-                    ",\n client: " + this.prescription.getCustomerLastName() +
-                    ",\n docteur: " + this.prescription.getDoctorLastName() + " }";
+            stringToReturn += ",\n Client: " + this.prescription.getCustomerLastName() +
+                    ",\n Docteur: " + this.prescription.getDoctorLastName() + " }";
         }else {
-            return "\nachat{ date: " + this.getPurchaseDate().toString() +
-                    ",\n liste des médicament: " + this.getPurchaseDrugsQuantity().toString() + " }";
+            stringToReturn += ",\n Achat sans prescription }";
         }
+        return stringToReturn;
     }
 
+    /**
+     * CREER UNE CHAINE STRING DE MEDICAMENTS AVEC LES QUANTITES
+     * @return String
+     */
     public String purchaseDrugsQuantityToString(){
         String[] drugList = new String[purchaseDrugsQuantity.size()];
         int i = 0;
@@ -147,6 +181,32 @@ public class Purchase {
             drugsQuantitiesList[z] = drugList[z] + " : " + quantityList[z] + "\n";
         }
         return Arrays.toString(drugsQuantitiesList);
+    }
+
+    /**
+     * CREER UNE LISTE DE COMMANDE PAR PERIODE
+     * @param startDate LocalDate
+     * @param endDate LocalDate
+     * @return
+     */
+    public static ArrayList searchPurchaseByPeriod(LocalDate startDate, LocalDate endDate) {
+        ArrayList purchaseByPeriod = new ArrayList();
+        for(Purchase purchase : purchasesHistory){
+            LocalDate date = purchase.getPurchaseDate();
+            if(date.isAfter(startDate) && date.isBefore(endDate)){
+                purchaseByPeriod.add(purchase);
+            } else if (date.isEqual(startDate) || date.isEqual(endDate)) {
+                purchaseByPeriod.add(purchase);
+            }
+        }
+        return purchaseByPeriod;
+    }
+
+    /**
+     * SUPPRIMER UNE COMMANDE L HISTORIQUE
+     */
+    public void deletePurchaseFromHistory() {
+        purchasesHistory.remove(this);
     }
 
 }
