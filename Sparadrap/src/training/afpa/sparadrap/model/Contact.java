@@ -16,6 +16,15 @@ public class Contact {
     private final String regexPhone = "([0-9][0-9]\\s){4}([0-9][0-9])";
     public final String regexEmail = "[^\\s@]+@[^\\s@]+\\.[^\\s@]+";
 
+    /**
+     * CONSTRUCTOR
+     * @param address String
+     * @param postalCode String
+     * @param town String
+     * @param phone String
+     * @param email String
+     * @throws InputException
+     */
     public Contact(String address, String postalCode, String town, String phone, String email) throws InputException {
         setAddress(address);
         setPostalCode(postalCode);
@@ -23,6 +32,11 @@ public class Contact {
         setPhone(phone);
         setEmail(email);
     }
+
+    /**
+     * CONSTRUCTOR
+     */
+    public Contact() {}
 
     /**
      * GETTER address

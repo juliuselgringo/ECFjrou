@@ -24,6 +24,11 @@ public class Person {
     }
 
     /**
+     * CONSTRUCTOR
+     */
+    public Person(){}
+
+    /**
      * GETTER firstName
      * @return String
      */
@@ -77,6 +82,15 @@ public class Person {
      */
     public Contact getContact() {
         return this.contact;
+    }
+
+    /**
+     * SETTER contact
+     * @param contact Contact
+     * @throws InputException
+     */
+    public void setContact(Contact contact) throws InputException {
+        this.contact = contact;
     }
 
     /**

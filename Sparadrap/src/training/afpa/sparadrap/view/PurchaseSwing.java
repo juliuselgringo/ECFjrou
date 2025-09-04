@@ -54,6 +54,9 @@ public class PurchaseSwing {
         JButton backButton = Gui.buttonMaker(panel,"Retour",190);
         backButton.addActionListener(e -> frame.dispose());
 
+        JButton exitButton = Gui.buttonMaker(panel, "Quitter", 220);
+        exitButton.addActionListener(e -> System.exit(0));
+
         customerBox.addActionListener(e -> {
             Customer customer = (Customer) customerBox.getSelectedItem();
 
@@ -129,6 +132,12 @@ public class PurchaseSwing {
             newPurchase.deletePurchaseFromHistory();
             frame.dispose();
         });
+
+        JButton exitButton = Gui.buttonMaker(panel, "Quitter", 250);
+        exitButton.addActionListener(e -> {
+            newPurchase.deletePurchaseFromHistory();
+            System.exit(0);
+        });
     }
 
     /**
@@ -156,8 +165,6 @@ public class PurchaseSwing {
     public static void history() {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
-
-
 
         Gui.labelMaker(panel, "Sélectionner une commande à afficher:",10,10);
         JComboBox historyBox = Gui.comboBoxMaker(panel,10,40,1500);
@@ -195,6 +202,11 @@ public class PurchaseSwing {
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",280);
         backButton.addActionListener(ev -> frame.dispose());
+
+        JButton exitButton = Gui.buttonMaker(panel, "Quitter", 310);
+        exitButton.addActionListener(e -> {
+            System.exit(0);
+        });
 
     }
 

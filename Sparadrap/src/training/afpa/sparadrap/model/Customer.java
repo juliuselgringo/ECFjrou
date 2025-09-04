@@ -12,7 +12,7 @@ public class Customer extends Person {
     private Mutual mutual;
     private Doctor doctor;
 
-    private static final String regexSocialSecurityId = "[12]\\d{2}(0[1-9]|1[0-2])\\d{2}\\d{3}\\d{3}\\d{2}";
+    private static final String regexSocialSecurityId = "\\d{15}";
     public static ArrayList<Customer> customersList = new ArrayList<>();
 
     /**
@@ -43,6 +43,15 @@ public class Customer extends Person {
      */
     public Customer(String firstName, String lastName, Contact contact) throws InputException {
         super(firstName, lastName, contact);
+        customersList.add(this);
+    }
+
+    /**
+     * CONSTRUCTOR
+     */
+    public Customer(){
+        super();
+        customersList.add(this);
     }
 
     /**
@@ -102,6 +111,15 @@ public class Customer extends Person {
     }
 
     /**
+     * SETTER mutual
+     * @param mutual Mutual
+     * @throws InputException
+     */
+    public void setMutual(Mutual mutual) throws InputException {
+        this.mutual = mutual;
+    }
+
+    /**
      * GETTER Doctor
      * @return Doctor
      */
@@ -110,15 +128,46 @@ public class Customer extends Person {
     }
 
     /**
+     * SETTER doctor
+     * @param doctor Doctor
+     * @throws InputException
+     */
+    public void setDoctor(Doctor doctor) throws InputException {
+        this.doctor = doctor;
+    }
+
+    /**
      * TO STRING
      * @return String
      */
     @Override
     public String toString() {
-        return "Client \nPrénom: " + getFirstName() + ", Nom: " + getLastName() +
-                ", Date de naissance: " + getDateOfBirth() + ", " + this.getContact() +
+        return "Client \nPrénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
+                ", Date de naissance: " + this.getDateOfBirth() + ", tel:" + this.getContact().getPhone() +
                 "\nMutuelle: " + this.getMutual().getname() + " " + this.getMutual().getContact().getPostalCode() +
-                ", \nDocteur: " + this.getDoctor().getLastName() +
-                " Agreement: " + this.getDoctor().getAgreementId() + "\n";
+                ", \nDocteur: " + this.getDoctor().getLastName() + " " + this.getDoctor().getContact().getPostalCode() + "\n";
     }
+
+    /**
+     * SUPPRIMER UN CLIENT
+     */
+    public void deleteCustomer(){
+        customersList.remove(this);
+    }
+
+    public static String[][] createCustomersMatrice(){
+        String[][] matrices = new String[customersList.size()][6];
+        int i = 0;
+        for (Customer customer : customersList) {
+            matrices[i][0] = customer.getFirstName();
+            matrices[i][1] = customer.getLastName();
+            matrices[i][2] = customer.getDateOfBirth().toString();
+            matrices[i][3] = customer.getContact().getPhone();
+            matrices[i][4] = customer.getMutual().getname() + " " + customer.getMutual().getContact().getPostalCode();
+            matrices[i][5] = customer.getDoctor().getLastName() + " " + customer.getDoctor().getContact().getPostalCode();
+            i++;
+        }
+        return matrices;
+    }
+
 }
