@@ -1,0 +1,73 @@
+package training.afpa.sparadrap.test;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import training.afpa.sparadrap.ExceptionTracking.InputException;
+import training.afpa.sparadrap.model.Contact;
+import training.afpa.sparadrap.model.Customer;
+import training.afpa.sparadrap.model.Doctor;
+import training.afpa.sparadrap.model.Mutual;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class CustomerTest {
+
+    Customer test = new Customer();
+
+    @Test
+    void constructor1_GetterAndSetter_ValidInput() throws InputException {
+        Contact mgen69 = new Contact("25 Av de la Mutualite","69000",
+                "Lyon","04 56 78 90 12","contact@mgen.fr");
+        Mutual mgenLyon = new Mutual("Mgen", mgen69, 0.80);
+        Contact contact = new Contact("3, rue de la joie","54000","Nancy","00 00 00 00 00", "azer@azer.aze");
+        Contact jeDup75 = new Contact("12 Rue de Paris", "75000", "Paris",
+                "01 23 45 67 89", "jean.dupont@medecin.fr");
+        Doctor jeDupParis = new Doctor("Jean", "Dupont", jeDup75,"12345678901");
+        Customer customer = new Customer("Jojo", "Ducont",contact,"123456789012345","2000-10-10",mgenLyon,jeDupParis);
+        assertEquals("Jojo", customer.getFirstName());
+        assertEquals("Ducont", customer.getLastName());
+        assertInstanceOf(Contact.class, customer.getContact());
+        assertEquals("123456789012345", customer.getSocialSecurityId());
+        assertEquals("2000-10-10", customer.getDateOfBirth().toString());
+        assertInstanceOf(Mutual.class, customer.getMutual());
+        assertInstanceOf(Doctor.class, customer.getDoctor());
+    }
+
+    @Test
+    void constructor2_GetterAndSetter_ValidInput() throws InputException {
+        Contact mgen69 = new Contact("25 Av de la Mutualite","69000",
+                "Lyon","04 56 78 90 12","contact@mgen.fr");
+        Mutual mgenLyon = new Mutual("Mgen", mgen69, 0.80);
+        Contact contact = new Contact("3, rue de la joie","54000","Nancy","00 00 00 00 00", "azer@azer.aze");
+        Contact jeDup75 = new Contact("12 Rue de Paris", "75000", "Paris",
+                "01 23 45 67 89", "jean.dupont@medecin.fr");
+        Doctor jeDupParis = new Doctor("Jean", "Dupont", jeDup75,"12345678901");
+        Customer customer = new Customer("Jojo", "Ducont",contact);
+        assertEquals("Jojo", customer.getFirstName());
+        assertEquals("Ducont", customer.getLastName());
+        assertInstanceOf(Contact.class, customer.getContact());
+    }
+
+    @Test
+    void constructor3_ValidInput() throws InputException {
+        Customer customer = new Customer();
+        assertInstanceOf(Customer.class, customer);
+    }
+
+    @ParameterizedTest(name="{0} le setter leve correctement l exception")
+    @ValueSource(strings={"","       ", "1234", "/*<>"})
+    void setterSocialSecurityId_InvalidInput(String socialSecurityId) throws InputException {
+        assertThrows(InputException.class, () -> test.setSocialSecurityId(socialSecurityId));
+    }
+
+    @ParameterizedTest(name="{0} le setter leve correctement l exception")
+    @ValueSource(strings={"","       ", "1234", "/*<>", "2026-01-01"})
+    void setterDateOfBirth_InvalidInput(String dateOf) throws InputException {
+        assertThrows(InputException.class, () -> test.setDateOfBirth(dateOf));
+    }
+
+
+}

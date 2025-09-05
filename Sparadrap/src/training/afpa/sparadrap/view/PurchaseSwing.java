@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PurchaseSwing {
 
@@ -146,12 +147,18 @@ public class PurchaseSwing {
      */
     public static void createDisplayPurchaseDrugs(Purchase newPurchase) {
         JFrame frame = Gui.setPopUpFrame(1000,800);
+        frame.setTitle("Commande en cours");
         JPanel panel = Gui.setPanel(frame);
         newPurchase.setPurchaseDetails();
         String[][] display = newPurchase.getPurchaseDetails();
-        Gui.tableMaker(panel,display,purchaseHistoryTableHeaders,10,10,800,200);
+        Gui.tableMaker(panel,display,purchaseHistoryTableHeaders,10,10,800,100);
 
-        JButton backButton = Gui.buttonMaker(panel,"Retour",440);
+        Double totalPrice = Purchase.totalPricePurchase(newPurchase);
+        JTextField priceField = Gui.textFieldMaker(panel,10,250);
+        priceField.setText("Prix Total" + totalPrice.toString());
+
+
+        JButton backButton = Gui.buttonMaker(panel,"Retour",300);
         backButton.addActionListener(e -> {
                 frame.remove(frame.getContentPane());
                 frame.dispose();

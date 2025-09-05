@@ -209,4 +209,12 @@ public class Purchase {
         purchasesHistory.remove(this);
     }
 
+    public static Double totalPricePurchase(Purchase purchase) {
+        Double totalPrice = 0.00;
+        Map<Drug, Integer> purchaseMap = purchase.getPurchaseDrugsQuantity();
+        for(Drug drug : purchaseMap.keySet()){
+            totalPrice += drug.getPrice() * purchaseMap.get(drug.getName());
+        }
+        return totalPrice;
+    }
 }

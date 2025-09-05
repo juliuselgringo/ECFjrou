@@ -27,6 +27,11 @@ public class Prescription {
     }
 
     /**
+     * CONSTRUCTOR
+     */
+    public Prescription(){};
+
+    /**
      * GETTER prescriptionDate
      * @return LocalDate
      */

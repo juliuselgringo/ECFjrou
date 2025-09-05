@@ -1,8 +1,10 @@
 package training.afpa.sparadrap.model;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
+import training.afpa.sparadrap.utility.Display;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Customer extends Person {
@@ -92,7 +94,12 @@ public class Customer extends Person {
      * @throws InputException
      */
     public void setDateOfBirth(String dateOfBirth) throws InputException {
-        LocalDate localDateOfBirth = LocalDate.parse(dateOfBirth.trim());
+        LocalDate localDateOfBirth = null;
+        try {
+            localDateOfBirth = LocalDate.parse(dateOfBirth.trim());
+        }catch(DateTimeParseException dtpe){
+            Display.error(dtpe.getMessage());
+        }
         if(localDateOfBirth == null) {
             throw new InputException("dateOfBirth cannot be null");
         } else if (localDateOfBirth.isAfter(LocalDate.now())) {

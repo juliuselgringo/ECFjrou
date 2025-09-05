@@ -3,6 +3,7 @@ package training.afpa.sparadrap.model;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Drug {
@@ -122,11 +123,17 @@ public class Drug {
      * @throws InputException
      */
     public void setProductionDate(String productDate) throws InputException {
-        LocalDate productionDate = LocalDate.parse(productDate.trim());
-        if(productionDate == null || productionDate.isAfter(LocalDate.now())){
+        LocalDate productionDateP =  null;
+        try{
+            productionDateP = LocalDate.parse(productDate.trim());
+        }catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+
+        if(productionDateP == null || productionDateP.isAfter(LocalDate.now())){
             throw new InputException("La date de production est invalide");
         }else{
-            this.productionDate = productionDate;
+            this.productionDate = productionDateP;
         }
     }
 
