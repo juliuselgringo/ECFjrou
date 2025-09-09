@@ -13,6 +13,7 @@ public class Purchase {
     private Integer purchaseNumber;
     private Boolean withPrescription;
     private Map<Drug, Integer> purchaseDrugsQuantity = new HashMap<>();
+    private Double totalPrice;
     private String[][] purchaseDetails;
     private Prescription prescription;
 
@@ -90,6 +91,27 @@ public class Purchase {
      */
     public Map<Drug, Integer>  getPurchaseDrugsQuantity() {
         return this.purchaseDrugsQuantity;
+    }
+
+    /**
+     * GETTER totalPrice
+     * @return Double
+     */
+    public Double getTotalPrice(){
+        return this.totalPrice;
+    }
+
+    /**
+     * SETTER totalPrice
+     */
+    public void setTotalPrice() {
+        this.totalPrice = 0.00;
+        Map<Drug, Integer> purchaseMap = this.getPurchaseDrugsQuantity();
+        for(Map.Entry<Drug, Integer> entity : purchaseMap.entrySet()) {
+            Drug drug = entity.getKey();
+            int quantity = entity.getValue();
+            this.totalPrice += drug.getPrice() * quantity;
+        }
     }
 
     /**
@@ -209,12 +231,4 @@ public class Purchase {
         purchasesHistory.remove(this);
     }
 
-    public static Double totalPricePurchase(Purchase purchase) {
-        Double totalPrice = 0.00;
-        Map<Drug, Integer> purchaseMap = purchase.getPurchaseDrugsQuantity();
-        for(Drug drug : purchaseMap.keySet()){
-            totalPrice += drug.getPrice() * purchaseMap.get(drug.getName());
-        }
-        return totalPrice;
-    }
 }

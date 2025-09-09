@@ -212,7 +212,7 @@ public class Drug {
     public static void stockUpdate(Drug drugToUpdate, int quantity) throws InputException {
         for(Drug drug : drugsList){
             if(drug.getName().equals(drugToUpdate.getName())){
-                drug.setQuantity(drug.getQuantity() - quantity);
+                drug.setQuantity(drug.getQuantity() + quantity);
                 return;
             }
         }

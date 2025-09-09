@@ -5,7 +5,6 @@ import training.afpa.sparadrap.model.*;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
@@ -110,7 +109,7 @@ public class PurchaseSwing {
                 newPurchase.setPurchaseDrugsQuantity(drugToAdd, quantity);
 
                 try {
-                    Drug.stockUpdate(drugToAdd, quantity);
+                    Drug.stockUpdate(drugToAdd, -quantity);
                     createDisplayPurchaseDrugs(newPurchase);
                 }catch (InputException ie){
                     JOptionPane.showMessageDialog(null, "Erreur de saisie ou quantité indisponible: " + ie.getMessage(),
@@ -130,15 +129,33 @@ public class PurchaseSwing {
 
         JButton cancelButton = Gui.buttonMaker(panel,"Annuler",220);
         cancelButton.addActionListener(e ->  {
-            newPurchase.deletePurchaseFromHistory();
+            cancelPurchase(newPurchase);
             frame.dispose();
         });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 250);
         exitButton.addActionListener(e -> {
-            newPurchase.deletePurchaseFromHistory();
+            cancelPurchase(newPurchase);
             System.exit(0);
         });
+    }
+
+    /**
+     * MET A JOUR LE STOCK ET L HISTORIQUE APRES ANNULATION
+     * @param newPurchase Purchase
+     */
+    public static void cancelPurchase(Purchase newPurchase){
+        Map<Drug, Integer> map = newPurchase.getPurchaseDrugsQuantity();
+        for(Map.Entry<Drug, Integer> entry : map.entrySet()){
+            Drug drug = entry.getKey();
+            int value = entry.getValue();
+            try {
+                Drug.stockUpdate(drug, value);
+            } catch (InputException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        newPurchase.deletePurchaseFromHistory();
     }
 
     /**
@@ -153,12 +170,19 @@ public class PurchaseSwing {
         String[][] display = newPurchase.getPurchaseDetails();
         Gui.tableMaker(panel,display,purchaseHistoryTableHeaders,10,10,800,100);
 
-        Double totalPrice = Purchase.totalPricePurchase(newPurchase);
+        newPurchase.setTotalPrice();
         JTextField priceField = Gui.textFieldMaker(panel,10,250);
-        priceField.setText("Prix Total" + totalPrice.toString());
+        priceField.setText("Prix Total : " +newPurchase.getTotalPrice() + " €");
+        priceField.setEditable(false);
 
+        if(newPurchase.getWithPrescription()) {
+            JTextField priceFieldPostMutualRate = Gui.textFieldMaker(panel, 10, 280);
+            priceFieldPostMutualRate.setText("Prix Total après déduction mutuelle : " +
+                    newPurchase.getTotalPrice() * (1 - getMutualRateByPrescription(newPurchase.getPrescription())) + " €");
+            priceFieldPostMutualRate.setEditable(false);
+        }
 
-        JButton backButton = Gui.buttonMaker(panel,"Retour",300);
+        JButton backButton = Gui.buttonMaker(panel,"Retour",340);
         backButton.addActionListener(e -> {
                 frame.remove(frame.getContentPane());
                 frame.dispose();
@@ -217,6 +241,10 @@ public class PurchaseSwing {
 
     }
 
+    /**
+     * CONSULTER UNE COMMANDE
+     * @param purchase Purchase
+     */
     public static void consultAPurchase(Purchase purchase) {
         JFrame frame2 = Gui.setPopUpFrame(1400,800);
         JPanel panel2 = Gui.setPanel(frame2);
@@ -230,6 +258,11 @@ public class PurchaseSwing {
         backButton2.addActionListener(ev -> frame2.dispose());
     }
 
+    /**
+     * CONSULTER UNE COMMANDE PAR DATES
+     * @param startDate LocalDate
+     * @param endDate LocalDate
+     */
     public static void consultPurchasesByPeriod(LocalDate startDate, LocalDate endDate) {
         JFrame frame2 = Gui.setPopUpFrame(1600,800);
         JPanel panel2 = Gui.setPanel(frame2);
@@ -253,6 +286,20 @@ public class PurchaseSwing {
         backButton2.addActionListener(ev -> frame2.dispose());
     }
 
-
+    /**
+     * RECUPERER TAUX MUTUELLE A PARTIR DE PRESCRIPTION
+     * @param prescription Prescription
+     * @return Double
+     */
+    public static Double getMutualRateByPrescription(Prescription prescription) {
+        String customerLastName = prescription.getCustomerLastName();
+        Mutual mutual = null;
+        for(Customer customer : Customer.customersList){
+            if(customer.getLastName().equals(customerLastName)){
+                mutual = customer.getMutual();
+            }
+        }
+        return mutual.getRate();
+    }
 
 }
