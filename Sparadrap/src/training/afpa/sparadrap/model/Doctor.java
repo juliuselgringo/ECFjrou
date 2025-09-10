@@ -2,13 +2,14 @@ package training.afpa.sparadrap.model;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Doctor extends Person {
 
     private String agreementId;
     private ArrayList<Customer> doctorCustomersList = new ArrayList<>();
-
+    private ArrayList<Prescription> doctorPrescriptionsList = new ArrayList<>();
     public static ArrayList<Doctor> doctorsList = new ArrayList<Doctor>();
 
     /**
@@ -80,16 +81,39 @@ public class Doctor extends Person {
     }
 
     /**
+     * GETTER doctorPrescriptionsList
+     * @return ArrayList
+     */
+    public ArrayList getDoctorPrescriptionsList(){
+        return this.doctorPrescriptionsList;
+    }
+
+    public void setDoctorPrescriptionsList(Prescription prescription) throws InputException {
+        for(Prescription p : doctorPrescriptionsList){
+            if(p.equals(prescription)){
+                throw new InputException("Cette prescription est déjà dans la liste du docteur");
+            }
+        }
+        this.doctorPrescriptionsList.add(prescription);
+    }
+
+    /**
      * TO STRING
      * @return String
      */
     @Override
     public String toString() {
-        return "\nDocteur{ Prénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
-                ", \nCoordonnées: " + this.getContact() + ", N° d'agréement: " + this.getAgreementId() +
-                " }";
+        return "\nDocteur" +
+                "\nPrénom: " + this.getFirstName() +
+                "\nNom: " + this.getLastName() +
+                "\n" + this.getContact() +
+                "\nN° d'agréement: " + this.getAgreementId();
     }
 
+    /**
+     * CREER UNE MATRICE DES MEDECINS
+     * @return String[][]
+     */
     public static String[][] createDoctorsMatrice(){
         String[][] matrices = new String[doctorsList.size()][5];
         int i = 0;
@@ -103,5 +127,41 @@ public class Doctor extends Person {
         }
         return matrices;
     }
+
+    /**
+     * CREER UNE MATRICE DES PATIENTS
+     * @return String[][]
+     */
+    public String[][] createCustomersMatrice(){
+        String[][] matrices = new String[this.doctorCustomersList.size()][5];
+        int i = 0;
+        for (Customer customer : this.doctorCustomersList) {
+            matrices[i][0] = customer.getFirstName();
+            matrices[i][1] = customer.getLastName();
+            matrices[i][2] = customer.getSocialSecurityId();
+            matrices[i][3] = customer.getContact().getPhone();
+            matrices[i][4] = customer.getContact().getEmail();
+            i++;
+        }
+        return matrices;
+    }
+
+    /**
+     * CREER UNE MATRICE DES PRESCRIPTIONS
+     * @return String[][]
+     */
+    public String[][] createPrescriptionsMatrice(){
+        String[][] matrices = new String[this.doctorPrescriptionsList.size()][2];
+        int i = 0;
+        for (Prescription prescription : this.doctorPrescriptionsList) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            matrices[i][0] = prescription.getPrescriptionDate().format(formatter);
+            matrices[i][1] = prescription.getCustomerLastName();
+            i++;
+        }
+        return matrices;
+    }
+
+
 
 }

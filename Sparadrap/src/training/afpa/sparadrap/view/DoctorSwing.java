@@ -13,39 +13,40 @@ public class DoctorSwing {
     /**
      * PAGE MEDECIN
      */
-    public static void doctorCheckList() {
+    public static void doctorMenu() {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
         Gui.labelMaker(panel, "Sélectionner un médecin:",10,10);
         JComboBox doctorBox = getDoctorBox(panel,40);
-
         JButton detailButton = Gui.buttonMaker(panel,"Détails du médecin", 130);
-        detailButton.addActionListener(e -> {
+        JButton modifyButton = Gui.buttonMaker(panel, "Modifier un médecin",160);
+        JButton deleteButton = Gui.buttonMaker(panel, "Supprimer un médecin",190);
+        JButton createButton = Gui.buttonMaker(panel,"Creer un médecin",220);
+        JButton customersListButton = Gui.buttonMaker(panel, "Listes des patients", 250);
+        JButton prescriptionsListButton = Gui.buttonMaker(panel, "Liste des prescriptions", 280);
+
+        String[] header = new String[]{"Prénom","Nom","N° d'agréement","Téléphone","Email"};
+        JTable table = Gui.tableMaker(panel,Doctor.createDoctorsMatrice(),header,800, 40,800,800);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        detailButton.addActionListener(e1 -> {
             Doctor doctor = (Doctor) doctorBox.getSelectedItem();
             displayDoctor(doctor);
         });
 
-        JButton modifyButton = Gui.buttonMaker(panel, "Modifier un médecin",160);
-        modifyButton.addActionListener(ev -> modifyDoctor((Doctor) doctorBox.getSelectedItem()));
+        modifyButton.addActionListener(e2 -> modifyDoctor((Doctor) doctorBox.getSelectedItem()));
 
-
-
-        JButton deleteButton = Gui.buttonMaker(panel, "Supprimer un client",190);
-        deleteButton.addActionListener(eve ->{
+        deleteButton.addActionListener(e3 ->{
             Doctor doctor= (Doctor)doctorBox.getSelectedItem();
-            int resp = JOptionPane.showConfirmDialog(null,
-                    "Etes vous sur de vouloir supprimer ce médecin" + doctor.getLastName(),
-                    "Confirmation", JOptionPane.YES_NO_OPTION);
-            if(resp == JOptionPane.YES_OPTION) {
-                Doctor.doctorsList.remove(doctor);
-                JOptionPane.showMessageDialog(null, "Le médecin a été supprimé avec succès.",
-                        "Succès",JOptionPane.INFORMATION_MESSAGE);
+            try {
+                deleteDoctor(doctor);
+            } catch (InputException e) {
+                throw new RuntimeException(e);
             }
         });
 
-        JButton createButton = Gui.buttonMaker(panel,"Creer un médecin",220);
-        createButton.addActionListener(ev -> {
+        createButton.addActionListener(e4 -> {
             try {
                 createDoctor();
             } catch (InputException e) {
@@ -53,7 +54,26 @@ public class DoctorSwing {
             }
         });
 
-        String[] header = new String[]{"Prénom","Nom","Agreement","Téléphone","email"};
+        customersListButton.addActionListener(e5 -> {
+            Doctor doctor = (Doctor) doctorBox.getSelectedItem();
+            displayDoctorCustomersList(doctor);
+        });
+
+        prescriptionsListButton.addActionListener(e6 -> {
+            Doctor doctor = (Doctor) doctorBox.getSelectedItem();
+            displayDoctorPrescriptionsList(doctor);
+        });
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if(e.getValueIsAdjusting()) {
+                int selectedRow = table.getSelectedRow();
+                if(selectedRow >= 0){
+                    Doctor doctor = Doctor.doctorsList.get(selectedRow);
+                    displayDoctor(doctor);
+                }
+            }
+        });
+
         Gui.tableMaker(panel,Doctor.createDoctorsMatrice(),header,800, 40,800,800);
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",490);
@@ -65,7 +85,7 @@ public class DoctorSwing {
         JButton updatePage = Gui.buttonMaker(panel,"Raffraichir la page",830);
         updatePage.addActionListener(ev -> {
             frame.dispose();
-            doctorCheckList();
+            doctorMenu();
         });
     }
 
@@ -136,51 +156,34 @@ public class DoctorSwing {
         JButton save = Gui.buttonMaker(panel, "Enregistrer", 450);
 
         JButton back2Button = Gui.buttonMaker(panel, "Retour", 480);
-        back2Button.addActionListener(ev -> frame.dispose());
+        back2Button.addActionListener(ev -> {
+            Doctor.doctorsList.remove(doctor);
+            frame.dispose();
+        });
+
+        JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
+        exitButton2.addActionListener(eve -> {
+            Doctor.doctorsList.remove(doctor);
+            System.exit(0);
+        });
 
         save.addActionListener(ev -> {
             try {
                 doctor.setFirstName(firstNameField.getText());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Prénom invalide" + e.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 doctor.setLastName(lastNameField.getText());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Nom invalide" + e.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 doctor.setAgreementId(agreementField.getText());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "N° agreement invalide" + e.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setTown(townField.getText());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Ville invalide" + e.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setPhone(phoneField.getText());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "telephone invalide" + e.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setEmail(emailField.getText());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "email invalide" + e.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setAddress(addressField.getText());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "adresse invalide" + e.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setPostalCode(postalField.getText());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "code postal invalide" + e.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Vos modification ont bien été enregitré",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();
+            } catch (InputException ie) {
+                JOptionPane.showMessageDialog(null, ie.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
-            JOptionPane.showMessageDialog(null, "Vos modification ont bien été enregitré", "Success", JOptionPane.INFORMATION_MESSAGE);
-            frame.dispose();
+
         });
     }
 
@@ -189,6 +192,45 @@ public class DoctorSwing {
         Doctor doctor= new Doctor();
         doctor.setContact(contact);
         modifyDoctor(doctor);
+    }
+
+    public static void deleteDoctor(Doctor doctor) throws InputException {
+        int resp = JOptionPane.showConfirmDialog(null,
+                "Etes vous sur de vouloir supprimer ce médecin" + doctor.getLastName(),
+                "Confirmation", JOptionPane.YES_NO_OPTION);
+        if(resp == JOptionPane.YES_OPTION) {
+            Doctor.doctorsList.remove(doctor);
+            JOptionPane.showMessageDialog(null, "Le médecin a été supprimé avec succès.",
+                    "Succès",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    public static void displayDoctorCustomersList(Doctor doctor){
+        JFrame frame2 = Gui.setPopUpFrame(800,500);
+        frame2.setTitle("Liste des patients");
+        JPanel panel2 = Gui.setPanel(frame2);
+        String[] header = new String[]{"Prénom", "Nom", "N° Secu", "Téléphone", "Email"};
+
+        Gui.tableMaker(panel2, doctor.createCustomersMatrice(), header,10,10,700,300);
+        JButton backButton = Gui.buttonMaker(panel2,"Retour",400);
+        backButton.addActionListener(ev -> frame2.dispose());
+
+        JButton exitButton = Gui.buttonMaker(panel2, "Quitter", 430);
+        exitButton.addActionListener(e -> System.exit(0));
+    }
+
+    public static void displayDoctorPrescriptionsList(Doctor doctor){
+        JFrame frame3 = Gui.setPopUpFrame(800,500);
+        JPanel panel3 = Gui.setPanel(frame3);
+        frame3.setTitle("Liste des prescriptions");
+        String[] header = new String[]{"Date","Nom du patient"};
+
+        Gui.tableMaker(panel3, doctor.createPrescriptionsMatrice(), header,10,10,700,300);
+        JButton backButton = Gui.buttonMaker(panel3,"Retour",400);
+        backButton.addActionListener(ev -> frame3.dispose());
+
+        JButton exitButton = Gui.buttonMaker(panel3, "Quitter", 430);
+        exitButton.addActionListener(e -> System.exit(0));
     }
 
 }

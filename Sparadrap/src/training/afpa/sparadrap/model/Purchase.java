@@ -2,6 +2,7 @@ package training.afpa.sparadrap.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,7 +55,8 @@ public class Purchase {
     }
 
     public  void setPurchaseDate(String purchaseDate) {
-        this.purchaseDate = LocalDate.parse(purchaseDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.purchaseDate = LocalDate.parse(purchaseDate, formatter);
     }
 
     /**
@@ -229,6 +231,26 @@ public class Purchase {
      */
     public void deletePurchaseFromHistory() {
         purchasesHistory.remove(this);
+    }
+
+    public static String[][] createpurchasesMatrice(){
+        String[][] purchaseMatrice = new String[purchasesHistory.size()][5];
+        int i = 0;
+        try {
+            for (Purchase purchase : purchasesHistory) {
+                purchaseMatrice[i][0] = purchase.getPurchaseDate().toString();
+                purchaseMatrice[i][1] = purchase.getPurchaseNumber().toString();
+                if(!purchase.getWithPrescription()){
+                    purchaseMatrice[i][2] = "sans ordonnance";
+                }else {
+                    purchaseMatrice[i][2] = purchase.getPrescription().getCustomerLastName();
+                }
+                i++;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return purchaseMatrice;
     }
 
 }

@@ -2,7 +2,10 @@ package training.afpa.sparadrap.model;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
+import javax.swing.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,12 +48,22 @@ public class Prescription {
      * @throws InputException
      */
     public void setPrescriptionDate(String prescriptionDateIn) throws InputException {
-        LocalDate prescriptionDateInLD = LocalDate.parse(prescriptionDateIn);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate prescriptionDateInLD = null;
+        try {
+            prescriptionDateInLD = LocalDate.parse(prescriptionDateIn, formatter);
+
+        }catch(DateTimeParseException dtpe){
+            JOptionPane.showMessageDialog(null, "Date de prescription invalide.",
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+
         if (prescriptionDateInLD.isAfter(LocalDate.now())) {
             throw new InputException("La date de prescription ne peut être après la date d'aujourd'hui!");
-        }else {
+        } else {
             this.prescriptionDate = prescriptionDateInLD;
         }
+
     }
 
     /**
@@ -71,6 +84,7 @@ public class Prescription {
         for (Doctor doctor : Doctor.doctorsList){
             if (doctor.getLastName().equals(doctorLastNameInSt)){
                this.doctorLastName = doctorLastNameInSt;
+               doctor.setDoctorPrescriptionsList(this);
                return;
             }
         }
@@ -127,4 +141,5 @@ public class Prescription {
                 ", nom du medecin: " + this.getDoctorLastName() + ", nom du client:  " + this.getCustomerLastName() +
                 ", liste des médicament: " + this.getDrugsQuantityPrescriptionList().toString() + '}';
     }
+
 }

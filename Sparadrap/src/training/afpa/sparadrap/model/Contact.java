@@ -54,7 +54,7 @@ public class Contact {
     public void setAddress(String address) throws InputException {
         address = address.trim();
         if(address == null || address.isEmpty()) {
-            throw  new InputException("Address cannot be empty or null");
+            throw  new InputException("L'adresse ne peut être vide ou nulle");
         } else if (!address.matches(regexAddress)) {
             throw new InputException("L'adresse ne doit pas contenir d'accent, ni trait d'union");
         }else{
@@ -78,7 +78,7 @@ public class Contact {
     public void setPostalCode(String postalCode) throws InputException {
         postalCode = postalCode.trim();
         if(postalCode == null || postalCode.isEmpty()) {
-            throw  new InputException("Postal code cannot be empty or null");
+            throw  new InputException("Le code postal ne peut être  vide ou nul");
         }else if(!postalCode.matches(regexPostalCode)) {
             throw new InputException("Un code postal ne doit contenir que 5 chiffres");
         }else {
@@ -102,9 +102,9 @@ public class Contact {
     public void setTown(String town) throws InputException {
         town = town.trim();
         if(town == null || town.isEmpty()) {
-            throw  new InputException("Town cannot be empty or null");
+            throw  new InputException("Le nom de la ville ne peut être vide ou nul");
         } else if (!town.matches(regexTown)) {
-            throw new InputException("Le nomde la ville ne doit pas contenir d'accent mais doitavoir une majuscule à chaque particule pour les noms composés");
+            throw new InputException("Le nom de la ville ne doit pas contenir d'accent mais doitavoir une majuscule à chaque particule pour les noms composés");
         }else{
             this.town = town;
         }
@@ -126,7 +126,7 @@ public class Contact {
     public void setPhone(String phone) throws InputException {
         phone = phone.trim();
         if(phone == null || phone.isEmpty()) {
-            throw  new InputException("Phone number cannot be empty or null");
+            throw  new InputException("Le n° de téléphone de peut être vide ou nul");
         } else if (!phone.matches(regexPhone)) {
             throw new InputException("Saisie invalide, séparé tout les 2 chiffres par un espace ex: xx xx xx xx xx");
         }else{
@@ -164,8 +164,12 @@ public class Contact {
      */
     @Override
     public String toString() {
-        return "\nContact \nAdresse: " + this.getAddress() + ", Code postal: " + this.getPostalCode() +
-                ", Ville: " + this.getTown() + ", \nTéléphone: " + this.getPhone() + ", Email: " + this.getEmail() + "\n";
+        return "\nContact" +
+                "\nAdresse: " + this.getAddress() +
+                "\n Code postal: " + this.getPostalCode() +
+                "\nVille: " + this.getTown() +
+                "\nTéléphone: " + this.getPhone() +
+                "\nEmail: " + this.getEmail();
     }
 
 

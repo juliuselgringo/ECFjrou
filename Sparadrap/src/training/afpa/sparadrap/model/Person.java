@@ -44,9 +44,11 @@ public class Person {
     public void setFirstName(String firstName) throws InputException {
         firstName = firstName.trim();
         if(firstName == null || firstName.isEmpty()) {
-            throw new InputException("First name cannot be empty or null");
+            throw new InputException("Le prénom ne peut être vide ou null");
         } else if (!firstName.matches(regexFirstName)) {
-            throw new InputException("Le prénom doit commencer par une majuscule et ne doit pas avoir d'accent ni trait d'union");
+            throw new InputException("Le prénom doit commencer par une majuscule" +
+                    "\nà chaque particule (pour les prénoms composés)" +
+                    "\net ne doit pas avoir d'accent ni trait d'union");
         }else {
             this.firstName = firstName;
         }
@@ -68,7 +70,7 @@ public class Person {
     public void setLastName(String lastName) throws InputException {
         lastName = lastName.trim();
         if(lastName == null || lastName.isEmpty()) {
-            throw  new InputException("Last name cannot be empty or null");
+            throw  new InputException("Le nom ne peut être vide ou null");
         } else if (!lastName.matches(regexLastName)) {
             throw new InputException("Le nom doit commencer par une majuscule et ne doit pas avoir d'accent ni trait d'union");
         }else{
@@ -99,8 +101,8 @@ public class Person {
      */
     @Override
     public String toString() {
-        return "Person{" + "firstName: " + this.getFirstName() + ", lastName: " + this.getLastName() +
-                ", coordonnées: " + this.getContact() + '}';
+        return "Personne{" + "Prénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
+                ", Coordonnées: " + this.getContact() + '}';
     }
 
 

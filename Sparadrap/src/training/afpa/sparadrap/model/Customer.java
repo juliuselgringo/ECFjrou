@@ -4,6 +4,7 @@ import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.utility.Display;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
@@ -72,9 +73,9 @@ public class Customer extends Person {
     public void setSocialSecurityId(String socialSecurityId) throws InputException {
         socialSecurityId = socialSecurityId.trim();
         if (socialSecurityId.isEmpty() || socialSecurityId == null) {
-            throw new InputException("socialSecurityId cannot be empty or null");
+            throw new InputException("Le n° de sécurité sociale ne peut être vide ou nul");
         } else if (!socialSecurityId.matches(regexSocialSecurityId)) {
-            throw new InputException("socialSecurityId is not valid");
+            throw new InputException("Le n° de sécurité sociale est invalide");
         } else {
             this.socialSecurityId = socialSecurityId;
         }
@@ -94,16 +95,18 @@ public class Customer extends Person {
      * @throws InputException
      */
     public void setDateOfBirth(String dateOfBirth) throws InputException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate localDateOfBirth = null;
         try {
-            localDateOfBirth = LocalDate.parse(dateOfBirth.trim());
+            localDateOfBirth = LocalDate.parse(dateOfBirth.trim(), formatter);
         }catch(DateTimeParseException dtpe){
             Display.error(dtpe.getMessage());
+            throw new InputException("Saisie date de naissance invalide");
         }
         if(localDateOfBirth == null) {
-            throw new InputException("dateOfBirth cannot be null");
+            throw new InputException("La date de naissance ne peut être nulle");
         } else if (localDateOfBirth.isAfter(LocalDate.now())) {
-            throw new InputException("dateOfBirth is after now");
+            throw new InputException("La date de naissance ne peut être postérieure à la date d'aujourd'hui");
         }else{
             this.dateOfBirth = localDateOfBirth;
         }
@@ -149,8 +152,9 @@ public class Customer extends Person {
      */
     @Override
     public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return "Client \nPrénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
-                ", Date de naissance: " + this.getDateOfBirth() + ", tel:" + this.getContact().getPhone() +
+                ", Date de naissance: " + this.getDateOfBirth().format(formatter) + ", tel:" + this.getContact().getPhone() +
                 "\nMutuelle: " + this.getMutual().getname() + " " + this.getMutual().getContact().getPostalCode() +
                 ", \nDocteur: " + this.getDoctor().getLastName() + " " + this.getDoctor().getContact().getPostalCode() + "\n";
     }
@@ -164,11 +168,12 @@ public class Customer extends Person {
 
     public static String[][] createCustomersMatrice(){
         String[][] matrices = new String[customersList.size()][6];
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         int i = 0;
         for (Customer customer : customersList) {
             matrices[i][0] = customer.getFirstName();
             matrices[i][1] = customer.getLastName();
-            matrices[i][2] = customer.getDateOfBirth().toString();
+            matrices[i][2] = customer.getDateOfBirth().format(formatter);
             matrices[i][3] = customer.getContact().getPhone();
             matrices[i][4] = customer.getMutual().getname() + " " + customer.getMutual().getContact().getPostalCode();
             matrices[i][5] = customer.getDoctor().getLastName() + " " + customer.getDoctor().getContact().getPostalCode();

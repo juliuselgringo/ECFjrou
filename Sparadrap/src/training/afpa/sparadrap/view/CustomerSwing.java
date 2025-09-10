@@ -1,21 +1,19 @@
 package training.afpa.sparadrap.view;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
-import training.afpa.sparadrap.model.Contact;
-import training.afpa.sparadrap.model.Customer;
-import training.afpa.sparadrap.model.Doctor;
-import training.afpa.sparadrap.model.Mutual;
+import training.afpa.sparadrap.model.*;
 import training.afpa.sparadrap.utility.Display;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.time.format.DateTimeFormatter;
 
 public class CustomerSwing {
 
     /**
      * PAGE CLIENT
      */
-    public static void customerCheckList() {
+    public static void customerMenu() {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
@@ -23,29 +21,30 @@ public class CustomerSwing {
         JComboBox customerBox = getCustomerBox(panel,40);
 
         JButton detailButton = Gui.buttonMaker(panel,"Détails du client", 130);
+        JButton modifyButton = Gui.buttonMaker(panel, "Modifier un client",160);
+        JButton deleteButton = Gui.buttonMaker(panel, "Supprimer un client",190);
+        JButton createButton = Gui.buttonMaker(panel,"Creer un client",220);
+
+        String[] header = new String[]{"Prénom","Nom","Date Naissance","Téléphone","Mutuelle","Medecin"};
+        JTable table = Gui.tableMaker(panel,Customer.createCustomersMatrice(),header,800, 40,800,800);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         detailButton.addActionListener(e -> {
             Customer customer = (Customer) customerBox.getSelectedItem();
             displayCustomer(customer);
         });
 
-        JButton modifyButton = Gui.buttonMaker(panel, "Modifier un client",160);
         modifyButton.addActionListener(ev -> modifyCustomer((Customer) customerBox.getSelectedItem()));
 
-        JButton deleteButton = Gui.buttonMaker(panel, "Supprimer un client",190);
         deleteButton.addActionListener(eve ->{
             Customer customer = (Customer)customerBox.getSelectedItem();
-            int resp = JOptionPane.showConfirmDialog(null,
-                    "Etes vous sur de vouloir supprimer ce client" + customer.getLastName(),
-                    "Confirmation", JOptionPane.YES_NO_OPTION);
-            if(resp == JOptionPane.YES_OPTION) {
-
-                customer.deleteCustomer();
-                JOptionPane.showMessageDialog(null, "Le client a été supprimé avec succès.",
-                        "Succès",JOptionPane.INFORMATION_MESSAGE);
+            try {
+                deleteCustomer(customer);
+            } catch (InputException e) {
+                throw new RuntimeException(e);
             }
         });
 
-        JButton createButton = Gui.buttonMaker(panel,"Creer un client",220);
         createButton.addActionListener(ev -> {
             try {
                 createCustomer();
@@ -54,13 +53,20 @@ public class CustomerSwing {
             }
         });
 
-        String[] header = new String[]{"Prénom","Nom","Date Naissance","Téléphone","Mutuelle","Medecin"};
-        Gui.tableMaker(panel,Customer.createCustomersMatrice(),header,800, 40,800,800);
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if(e.getValueIsAdjusting()) {
+                int selectedRow = table.getSelectedRow();
+                if(selectedRow >= 0){
+                    Customer customer = Customer.customersList.get(selectedRow);
+                    displayCustomer(customer);
+                }
+            }
+        });
 
         JButton updatePage = Gui.buttonMaker(panel,"Raffraichir la page",830);
         updatePage.addActionListener(ev -> {
            frame.dispose();
-           customerCheckList();
+           customerMenu();
         });
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",490);
@@ -68,9 +74,6 @@ public class CustomerSwing {
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
         exitButton.addActionListener(e -> System.exit(0));
-
-
-
     }
 
     /**
@@ -131,7 +134,7 @@ public class CustomerSwing {
         JTextField townField = Gui.textFieldMaker(panel,400,160);
         townField.setText(contact.getTown());
 
-        Gui.labelMaker(panel,"téléphone: ",10,190);
+        Gui.labelMaker(panel,"téléphone (XX XX XX XX XX: ",10,190);
         JTextField phoneField = Gui.textFieldMaker(panel,10,220);
         phoneField.setText(contact.getPhone());
 
@@ -139,15 +142,16 @@ public class CustomerSwing {
         JTextField emailField = Gui.textFieldMaker(panel,400,220);
         emailField.setText(contact.getEmail());
 
-        Gui.labelMaker(panel,"date de naissance: ",10,250);
+        Gui.labelMaker(panel,"date de naissance(JJ-MM-AAAA): ",10,250);
         JTextField birthField = Gui.textFieldMaker(panel,10,280);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try {
-            birthField.setText(customer.getDateOfBirth().toString());
+            birthField.setText(customer.getDateOfBirth().format(formatter));
         }catch(NullPointerException npe) {
             Display.error(npe.getMessage());
         }
 
-        Gui.labelMaker(panel,"N° de sécurité sociale: ",400,250);
+        Gui.labelMaker(panel,"N° de sécurité sociale (15 chiffres): ",400,250);
         JTextField secuField = Gui.textFieldMaker(panel,400,280);
         secuField.setText(customer.getSocialSecurityId());
 
@@ -166,66 +170,37 @@ public class CustomerSwing {
         JButton save =  Gui.buttonMaker(panel,"Enregistrer",450);
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",480);
-        back2Button.addActionListener(ev -> frame.dispose());
+        back2Button.addActionListener(ev -> {
+            Customer.customersList.remove(customer);
+            frame.dispose();
+        });
+
+        JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
+        exitButton2.addActionListener(eve -> {
+            Customer.customersList.remove(customer);
+            System.exit(0);
+        });
 
         save.addActionListener(ev -> {
             try {
                 customer.setFirstName(firstNameField.getText());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"Prénom invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 customer.setLastName(lastNameField.getText());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"Nom invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 customer.setDateOfBirth(birthField.getText());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"date de naissance invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 customer.setSocialSecurityId(secuField.getText());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"N° secu invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 customer.setMutual((Mutual) mutualBox.getSelectedItem());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"mutuelle invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 customer.setDoctor((Doctor) docBox.getSelectedItem());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"medecin invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setTown(townField.getText());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"Ville invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setPhone(phoneField.getText());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"telephone invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setEmail(emailField.getText());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"email invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setAddress(addressField.getText());
-            }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"adresse invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
-            }
-            try {
                 contact.setPostalCode(postalField.getText());
+                JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré","Success",JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();
+            }catch(InputException ie) {
+                JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
             }catch(Exception e) {
-                JOptionPane.showMessageDialog(null,"code postal invalide"+e.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
+                e.getStackTrace();
             }
-            JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré","Success",JOptionPane.INFORMATION_MESSAGE);
-            frame.dispose();
 
         });
     }
@@ -241,6 +216,21 @@ public class CustomerSwing {
         modifyCustomer(customer);
     }
 
+    /**
+     * SUPPRIMER UN CLIENT
+     * @param customer Customer
+     * @throws InputException
+     */
+    public static void deleteCustomer(Customer customer) throws InputException {
+        int resp = JOptionPane.showConfirmDialog(null,
+                "Etes vous sur de vouloir supprimer ce client" + customer.getLastName(),
+                "Confirmation", JOptionPane.YES_NO_OPTION);
+        if(resp == JOptionPane.YES_OPTION) {
 
+            customer.deleteCustomer();
+            JOptionPane.showMessageDialog(null, "Le client a été supprimé avec succès.",
+                    "Succès",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 
 }

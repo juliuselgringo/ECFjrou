@@ -15,11 +15,14 @@ public class ProgramSwing {
         JButton purchaseHistory = Gui.buttonMaker(panel, "Historique des Achats", 40);
         purchaseHistory.addActionListener(e -> {PurchaseSwing.history();});
 
-        JButton doctorCheck = Gui.buttonMaker(panel, "Liste des médecins", 70);
-        doctorCheck.addActionListener(e -> {DoctorSwing.doctorCheckList();});
+        JButton doctor = Gui.buttonMaker(panel, "Médecins", 70);
+        doctor.addActionListener(e -> {DoctorSwing.doctorMenu();});
 
-        JButton customerCheck = Gui.buttonMaker(panel, "Liste des clients",100);
-        customerCheck.addActionListener(e -> {CustomerSwing.customerCheckList();});
+        JButton customer = Gui.buttonMaker(panel, "Clients",100);
+        customer.addActionListener(e -> {CustomerSwing.customerMenu();});
+
+        JButton drug = Gui.buttonMaker(panel, "Clients",100);
+        drug.addActionListener(e -> {DrugSwing.drugMenu();});
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 190);
         exitButton.addActionListener(e -> System.exit(0));

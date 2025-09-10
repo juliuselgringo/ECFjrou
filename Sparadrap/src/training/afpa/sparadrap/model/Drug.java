@@ -3,6 +3,7 @@ package training.afpa.sparadrap.model;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
@@ -123,9 +124,10 @@ public class Drug {
      * @throws InputException
      */
     public void setProductionDate(String productDate) throws InputException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate productionDateP =  null;
         try{
-            productionDateP = LocalDate.parse(productDate.trim());
+            productionDateP = LocalDate.parse(productDate.trim(), formatter);
         }catch(Exception e){
             System.err.println(e.getMessage());
         }
