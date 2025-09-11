@@ -15,6 +15,7 @@ public class Prescription {
     private String doctorLastName;
     private String customerLastName;
     private Map<Drug, Integer> drugsQuantityPrescriptionsList = new HashMap<>();
+    public Integer purchaseNumber;
 
     /**
      * CONSTRUCTOR
@@ -137,9 +138,11 @@ public class Prescription {
 
     @Override
     public String toString() {
-        return "Prescription{ prescriptionDate: " + this.getPrescriptionDate() +
-                ", nom du medecin: " + this.getDoctorLastName() + ", nom du client:  " + this.getCustomerLastName() +
-                ", liste des médicament: " + this.getDrugsQuantityPrescriptionList().toString() + '}';
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return "Date: " + this.getPrescriptionDate().format(formatter) +
+                "\nNom du medecin: " + this.getDoctorLastName() +
+                "\nNom du client:  " + this.getCustomerLastName() +
+                "\nListe des médicament: " + this.getDrugsQuantityPrescriptionList().toString() + '}';
     }
 
 }

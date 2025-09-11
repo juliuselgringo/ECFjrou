@@ -7,6 +7,7 @@ import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 public class CustomerSwing {
 
@@ -34,7 +35,7 @@ public class CustomerSwing {
             displayCustomer(customer);
         });
 
-        modifyButton.addActionListener(ev -> modifyCustomer((Customer) customerBox.getSelectedItem()));
+        modifyButton.addActionListener(ev -> modifyCustomer(((Customer) customerBox.getSelectedItem()),frame));
 
         deleteButton.addActionListener(eve ->{
             Customer customer = (Customer)customerBox.getSelectedItem();
@@ -47,7 +48,7 @@ public class CustomerSwing {
 
         createButton.addActionListener(ev -> {
             try {
-                createCustomer();
+                createCustomer(frame);
             } catch (InputException e) {
                 throw new RuntimeException(e);
             }
@@ -81,14 +82,29 @@ public class CustomerSwing {
      * @param customer
      */
     public static void displayCustomer(Customer customer) {
-        JFrame customerFrame = Gui.setPopUpFrame(1200,500);
+        JFrame customerFrame = Gui.setPopUpFrame(800,500);
         JPanel customerPanel = Gui.setPanel(customerFrame);
-        Gui.textAreaMaker(customerPanel, customer.toString(),10,10,1200,300 );
+        Gui.textAreaMaker(customerPanel, customer.toStringForDetails(),10,10,700,300 );
 
-        JButton back2Button = Gui.buttonMaker(customerPanel,"Retour",340);
+        JButton mutualButton = Gui.buttonMaker(customerPanel, "Mutuelles",340);
+        mutualButton.addActionListener(e -> {
+            customerFrame.dispose();
+            JFrame frame = Gui.setPopUpFrame(800,500);
+            JPanel panel = Gui.setPanel(frame);
+
+            Gui.textAreaMaker(panel, customer.getMutual().toString(),10,10,700,300 );
+
+            JButton back2Button = Gui.buttonMaker(panel,"Retour",400);
+            back2Button.addActionListener(ev -> frame.dispose());
+
+            JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 430);
+            exitButton2.addActionListener(eve -> System.exit(0));
+        });
+
+        JButton back2Button = Gui.buttonMaker(customerPanel,"Retour",400);
         back2Button.addActionListener(ev -> customerFrame.dispose());
 
-        JButton exitButton2 = Gui.buttonMaker(customerPanel, "Quitter", 370);
+        JButton exitButton2 = Gui.buttonMaker(customerPanel, "Quitter", 430);
         exitButton2.addActionListener(eve -> System.exit(0));
     }
 
@@ -110,7 +126,7 @@ public class CustomerSwing {
      * FORMULAIRE DE MODIFICATION DES INFOS CLIENTS
      * @param customer Customer
      */
-    public static void modifyCustomer(Customer customer) {
+    public static void modifyCustomer(Customer customer, JFrame frame1) {
         JFrame frame = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frame);
         Contact contact = customer.getContact();
@@ -134,7 +150,7 @@ public class CustomerSwing {
         JTextField townField = Gui.textFieldMaker(panel,400,160);
         townField.setText(contact.getTown());
 
-        Gui.labelMaker(panel,"téléphone (XX XX XX XX XX: ",10,190);
+        Gui.labelMaker(panel,"téléphone (XX XX XX XX XX): ",10,190);
         JTextField phoneField = Gui.textFieldMaker(panel,10,220);
         phoneField.setText(contact.getPhone());
 
@@ -144,7 +160,7 @@ public class CustomerSwing {
 
         Gui.labelMaker(panel,"date de naissance(JJ-MM-AAAA): ",10,250);
         JTextField birthField = Gui.textFieldMaker(panel,10,280);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         try {
             birthField.setText(customer.getDateOfBirth().format(formatter));
         }catch(NullPointerException npe) {
@@ -194,8 +210,12 @@ public class CustomerSwing {
                 contact.setEmail(emailField.getText());
                 contact.setAddress(addressField.getText());
                 contact.setPostalCode(postalField.getText());
-                JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré","Success",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
+                        "Success",JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
+                frame1.dispose();
+                Customer.customersList.sort(Comparator.comparing(Customer::getLastName));
+                customerMenu();
             }catch(InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);
             }catch(Exception e) {
@@ -209,11 +229,11 @@ public class CustomerSwing {
      * CREER UN MEDECIN
      * @throws InputException
      */
-    public static void createCustomer() throws InputException {
+    public static void createCustomer(JFrame frame) throws InputException {
         Contact contact = new Contact();
         Customer customer = new Customer();
         customer.setContact(contact);
-        modifyCustomer(customer);
+        modifyCustomer(customer,frame);
     }
 
     /**

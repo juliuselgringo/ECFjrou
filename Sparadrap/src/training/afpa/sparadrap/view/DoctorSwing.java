@@ -2,11 +2,13 @@ package training.afpa.sparadrap.view;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.model.Contact;
-import training.afpa.sparadrap.model.Customer;
 import training.afpa.sparadrap.model.Doctor;
+import training.afpa.sparadrap.model.Prescription;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class DoctorSwing {
 
@@ -35,7 +37,7 @@ public class DoctorSwing {
             displayDoctor(doctor);
         });
 
-        modifyButton.addActionListener(e2 -> modifyDoctor((Doctor) doctorBox.getSelectedItem()));
+        modifyButton.addActionListener(e2 -> modifyDoctor((Doctor) doctorBox.getSelectedItem(),frame));
 
         deleteButton.addActionListener(e3 ->{
             Doctor doctor= (Doctor)doctorBox.getSelectedItem();
@@ -48,7 +50,7 @@ public class DoctorSwing {
 
         createButton.addActionListener(e4 -> {
             try {
-                createDoctor();
+                createDoctor(frame);
             } catch (InputException e) {
                 throw new RuntimeException(e);
             }
@@ -106,7 +108,7 @@ public class DoctorSwing {
     public static void displayDoctor(Doctor doctor) {
         JFrame frame = Gui.setPopUpFrame(1200,500);
         JPanel panel = Gui.setPanel(frame);
-        Gui.textAreaMaker(panel, doctor.toString(),10,10,1200,300 );
+        Gui.textAreaMaker(panel, doctor.toStringForDetails(),10,10,1200,300 );
 
         JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
         back2Button.addActionListener(ev -> frame.dispose());
@@ -115,7 +117,7 @@ public class DoctorSwing {
         exitButton2.addActionListener(eve -> System.exit(0));
     }
 
-    public static void modifyDoctor(Doctor doctor) {
+    public static void modifyDoctor(Doctor doctor, JFrame frame1) {
         JFrame frame = Gui.setPopUpFrame(800, 1000);
         JPanel panel = Gui.setPanel(frame);
         Contact contact = doctor.getContact();
@@ -177,9 +179,12 @@ public class DoctorSwing {
                 contact.setEmail(emailField.getText());
                 contact.setAddress(addressField.getText());
                 contact.setPostalCode(postalField.getText());
+                Doctor.doctorsList.sort(Comparator.comparing(Doctor::getLastName));
                 JOptionPane.showMessageDialog(null, "Vos modification ont bien été enregitré",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
+                frame1.dispose();
+                doctorMenu();
             } catch (InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -187,11 +192,11 @@ public class DoctorSwing {
         });
     }
 
-    public static void createDoctor() throws InputException {
+    public static void createDoctor(JFrame frame) throws InputException {
         Contact contact = new Contact();
         Doctor doctor= new Doctor();
         doctor.setContact(contact);
-        modifyDoctor(doctor);
+        modifyDoctor(doctor,frame);
     }
 
     public static void deleteDoctor(Doctor doctor) throws InputException {
@@ -220,16 +225,31 @@ public class DoctorSwing {
     }
 
     public static void displayDoctorPrescriptionsList(Doctor doctor){
-        JFrame frame3 = Gui.setPopUpFrame(800,500);
-        JPanel panel3 = Gui.setPanel(frame3);
-        frame3.setTitle("Liste des prescriptions");
-        String[] header = new String[]{"Date","Nom du patient"};
+        JFrame frame = Gui.setPopUpFrame(800,500);
+        JPanel panel = Gui.setPanel(frame);
+        frame.setTitle("Liste des prescriptions");
+        String[] header = new String[]{"Date","Nom du patient","Numéro de commande"};
 
-        Gui.tableMaker(panel3, doctor.createPrescriptionsMatrice(), header,10,10,700,300);
-        JButton backButton = Gui.buttonMaker(panel3,"Retour",400);
-        backButton.addActionListener(ev -> frame3.dispose());
+        JTable table = Gui.tableMaker(panel, doctor.createPrescriptionsMatrice(), header,10,10,700,300);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if(e.getValueIsAdjusting()) {
+                int selectedRow = table.getSelectedRow();
+                ArrayList list = doctor.getDoctorPrescriptionsList();
+                if(selectedRow >= 0) {
+                    Prescription prescription = (Prescription)list.get(selectedRow);
+                    PrescriptionSwing.displayPrescription(prescription);
+                    frame.dispose();
+                }
+            }
+        });
+        Gui.labelMaker(panel,"Cliquez dans le tableau pour avoir les détails de la prescription",
+                10,330);
 
-        JButton exitButton = Gui.buttonMaker(panel3, "Quitter", 430);
+        JButton backButton = Gui.buttonMaker(panel,"Retour",400);
+        backButton.addActionListener(ev -> frame.dispose());
+
+        JButton exitButton = Gui.buttonMaker(panel, "Quitter", 430);
         exitButton.addActionListener(e -> System.exit(0));
     }
 

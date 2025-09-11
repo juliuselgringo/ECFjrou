@@ -32,6 +32,14 @@ public class Main {
             Contact maMar69 = new Contact("45 Av des Champs", "69000", "Lyon",
                     "04 56 78 90 12", "marie.martin@medecin.fr");
             Doctor maMarLyon = new Doctor("Marie", "Martin", maMar69, "23456789012");
+
+            Contact jeDuc71 = new Contact("12 Rue de Pffft", "71000", "Pfffft",
+                    "06 23 45 67 89", "jeannot.ducont@medecin.fr");
+            new Doctor("Jeannot", "Ducont", jeDuc71, "12345678901");
+
+            Contact maMar68 = new Contact("45 Av des Choux", "68000", "Colmar",
+                    "02 56 78 90 12", "mario.martais@medecin.fr");
+            new Doctor("Mario", "Martais", maMar68, "13456789012");
             //________________________CLIENTS__________________________________________
             Contact alLef75 = new Contact("12 Rue de Paris", "75000", "Paris",
                     "01 23 45 67 89", "alice.lefevre@mail.fr");
@@ -41,6 +49,16 @@ public class Main {
             Contact maPet69 = new Contact("34 Av des Camps", "69000", "Lyon",
                     "04 56 78 90 12", "marc.petit@mail.fr");
             Customer maPetLyon = new Customer("Marc", "Petit", maPet69, "185076432109818",
+                    "20-12-1975", mgenLyon, maMarLyon);
+
+            Contact jaBour54 = new Contact("12 Rue de Paris", "54000", "Nancy",
+                    "03 23 45 67 89", "jacques.bourdin@mail.fr");
+            Customer jaBourNancy = new Customer("Jacques", "Bourdin", jaBour54, "175126432109848",
+                    "15-01-1982",harmonie75, jeDupParis);
+
+            Contact maPet60 = new Contact("34 Av des Champs", "60000", "Chaipas",
+                    "04 56 78 90 12", "marc.petit@mail.fr");
+            Customer maPet = new Customer("Marianne", "Petoncourt", maPet60, "285076432109818",
                     "20-12-1975", mgenLyon, maMarLyon);
 
             //_______________________MEDICAMENTS___________________________
@@ -85,13 +103,12 @@ public class Main {
             purchase4.setPurchaseDrugsQuantity(Drug.drugsList.get(2), 1);
             purchase4.setPurchaseDrugsQuantity(Drug.drugsList.get(4), 1);
             purchase4.setPurchaseDrugsQuantity(Drug.drugsList.get(8), 1);
+            purchase4.setPurchaseDrugsQuantity(Drug.drugsList.get(1), 1);
             purchase4.setPurchaseDetails();
         }catch(InputException ie) {
             System.err.println("Erreur au chargement des données.");
             ie.printStackTrace();
             System.exit(1);
         }
-
-
     }
 }

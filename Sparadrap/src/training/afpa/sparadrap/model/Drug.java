@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Drug {
 
@@ -16,7 +18,7 @@ public class Drug {
     private int quantity;
     private Boolean underPrescription;
 
-    private final String regexName = "[A-Z][a-z]+([\\s][A-Z][a-z]+)?";
+    private final String regexName = "[A-Z][a-z]+([\\s][A-Z][a-z]+)?([\\s][0-9]+)?";
 
     public static ArrayList<Drug> drugsList =  new ArrayList<>();
 
@@ -63,6 +65,14 @@ public class Drug {
         this.setProductionDate(productDate);
         this.setQuantity(quantity);
         this.setUnderPrescription(underPrescription);
+        drugsList.add(this);
+        drugsList.sort(Comparator.comparing(Drug::getName));
+    }
+
+    /**
+     * CONSTRUCTOR
+     */
+    public Drug(){
         drugsList.add(this);
     }
 
@@ -206,11 +216,21 @@ public class Drug {
      */
     @Override
     public String toString() {
-        return "Medicament{ nom: " + this.getName() + ", catégorie: " + this.getCategoryName() +
-                ", prix: " + this.getPrice() + ", date de production: " + this.getProductionDate() +
-                ", quantité: " + this.getQuantity() + ", underPrescription: " + this.isUnderPrescription() + "}";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return "\n\nNom: " + this.getName() +
+                "\nCatégorie: " + this.getCategoryName() +
+                "\nPrix: " + this.getPrice() +
+                "\nDate de production: " + this.getProductionDate().format(formatter) +
+                "\nQuantité en stock: " + this.getQuantity() +
+                "\nUnderPrescription: " + this.isUnderPrescription();
     }
 
+    /**
+     * MISE A JOUR DU STOCK
+     * @param drugToUpdate Drug
+     * @param quantity int
+     * @throws InputException
+     */
     public static void stockUpdate(Drug drugToUpdate, int quantity) throws InputException {
         for(Drug drug : drugsList){
             if(drug.getName().equals(drugToUpdate.getName())){
@@ -219,6 +239,26 @@ public class Drug {
             }
         }
         throw new InputException("Médicament introuvable");
+    }
+
+    /**
+     * CREER UNE MATRICE DES MEDICAMENTS
+     * @return String[][]
+     */
+    public static String[][] createDrugsMatrice(){
+        String[][] matrices = new String[drugsList.size()][6];
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        int i = 0;
+        for (Drug drug : drugsList) {
+            matrices[i][0] = drug.getName();
+            matrices[i][1] = drug.getCategoryName();
+            matrices[i][2] = drug.getPrice().toString();
+            matrices[i][3] = drug.getProductionDate().format(formatter);
+            matrices[i][4] = ((Integer)drug.getQuantity()).toString();
+            matrices[i][5] = drug.isUnderPrescription().toString();
+            i++;
+        }
+        return matrices;
     }
 
 }

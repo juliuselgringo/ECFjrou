@@ -171,40 +171,9 @@ public class Purchase {
      */
     @Override
     public String toString() {
-        String stringToReturn = "\nAchat{ Date: " + this.getPurchaseDate().toString() +
+        String stringToReturn = "\nDate: " + this.getPurchaseDate().toString() +
                 ", Numéro de commande: " + this.getPurchaseNumber();
-        if(withPrescription) {
-            stringToReturn += ",\n Client: " + this.prescription.getCustomerLastName() +
-                    ",\n Docteur: " + this.prescription.getDoctorLastName() + " }";
-        }else {
-            stringToReturn += ",\n Achat sans prescription }";
-        }
         return stringToReturn;
-    }
-
-    /**
-     * CREER UNE CHAINE STRING DE MEDICAMENTS AVEC LES QUANTITES
-     * @return String
-     */
-    public String purchaseDrugsQuantityToString(){
-        String[] drugList = new String[purchaseDrugsQuantity.size()];
-        int i = 0;
-        for(Drug drug :  purchaseDrugsQuantity.keySet()){
-            drugList[i] = drug.toString();
-            i++;
-        }
-        String[] quantityList = new String[purchaseDrugsQuantity.size()];
-        int j = 0;
-        for(Integer quantity : purchaseDrugsQuantity.values()){
-            quantityList[j] = quantity.toString();
-            j++;
-        }
-
-        String[] drugsQuantitiesList = new String[purchaseDrugsQuantity.size()];
-        for (int z = 0; z < quantityList.length; z++){
-            drugsQuantitiesList[z] = drugList[z] + " : " + quantityList[z] + "\n";
-        }
-        return Arrays.toString(drugsQuantitiesList);
     }
 
     /**
@@ -233,6 +202,10 @@ public class Purchase {
         purchasesHistory.remove(this);
     }
 
+    /**
+     * CREER UNE MATRICE DES ACHATS
+     * @return
+     */
     public static String[][] createpurchasesMatrice(){
         String[][] purchaseMatrice = new String[purchasesHistory.size()][5];
         int i = 0;

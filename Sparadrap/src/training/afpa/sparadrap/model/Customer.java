@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Customer extends Person {
 
@@ -34,6 +35,7 @@ public class Customer extends Person {
         this.mutual =  mutual;
         this.doctor = doctor;
         customersList.add(this);
+        customersList.sort(Comparator.comparing(Customer::getLastName));
         this.doctor.setDoctorCustomersList(this);
     }
 
@@ -153,10 +155,22 @@ public class Customer extends Person {
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return "Client \nPrénom: " + this.getFirstName() + ", Nom: " + this.getLastName() +
-                ", Date de naissance: " + this.getDateOfBirth().format(formatter) + ", tel:" + this.getContact().getPhone() +
+        return "Prénom: " + this.getFirstName() + ", Nom: " + this.getLastName();
+    }
+
+
+    /**
+     * TO STRING DE TOUTES LES INFOS CLIENTS
+     * @return
+     */
+    public String toStringForDetails(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return "Client \nPrénom: " + this.getFirstName() +
+                "\nNom: " + this.getLastName() +
+                "\nDate de naissance: " + this.getDateOfBirth().format(formatter) +
+                "\nTel:" + this.getContact().getPhone() +
                 "\nMutuelle: " + this.getMutual().getname() + " " + this.getMutual().getContact().getPostalCode() +
-                ", \nDocteur: " + this.getDoctor().getLastName() + " " + this.getDoctor().getContact().getPostalCode() + "\n";
+                "\nDocteur: " + this.getDoctor().getLastName() + " " + this.getDoctor().getContact().getPostalCode() + "\n";
     }
 
     /**
@@ -166,6 +180,10 @@ public class Customer extends Person {
         customersList.remove(this);
     }
 
+    /**
+     * CREER UNE MATRICE DES CLIENTS
+     * @return String[][]
+     */
     public static String[][] createCustomersMatrice(){
         String[][] matrices = new String[customersList.size()][6];
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

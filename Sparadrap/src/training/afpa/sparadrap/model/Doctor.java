@@ -4,6 +4,7 @@ import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Doctor extends Person {
 
@@ -24,6 +25,7 @@ public class Doctor extends Person {
         super(firstName, lastName, contact);
         setAgreementId(agreementId);
         doctorsList.add(this);
+        doctorsList.sort(Comparator.comparing(Doctor::getLastName));
     }
 
     /**
@@ -103,10 +105,19 @@ public class Doctor extends Person {
      */
     @Override
     public String toString() {
+        return "\nPrénom: " + this.getFirstName() +
+                "\n Nom: " + this.getLastName();
+    }
+
+    /**
+     *
+     * @return String
+     */
+    public String toStringForDetails(){
         return "\nDocteur" +
                 "\nPrénom: " + this.getFirstName() +
                 "\nNom: " + this.getLastName() +
-                "\n" + this.getContact() +
+                "\n"  + this.getContact() +
                 "\nN° d'agréement: " + this.getAgreementId();
     }
 
@@ -151,12 +162,15 @@ public class Doctor extends Person {
      * @return String[][]
      */
     public String[][] createPrescriptionsMatrice(){
-        String[][] matrices = new String[this.doctorPrescriptionsList.size()][2];
+        String[][] matrices = new String[this.doctorPrescriptionsList.size()][3];
         int i = 0;
         for (Prescription prescription : this.doctorPrescriptionsList) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             matrices[i][0] = prescription.getPrescriptionDate().format(formatter);
             matrices[i][1] = prescription.getCustomerLastName();
+            try {
+                matrices[i][2] = prescription.purchaseNumber.toString();
+            }catch(NullPointerException npe){};
             i++;
         }
         return matrices;

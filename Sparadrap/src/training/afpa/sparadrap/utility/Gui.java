@@ -82,6 +82,25 @@ public class Gui {
 
     /**
      *
+     * @param panel Jpanel
+     * @param sentence String
+     * @param positionY int
+     * @param height int
+     * @return JTextArea
+     */
+    public static JTextArea textAreaMakerScroll(JPanel panel, String sentence,int positionX, int positionY,int width, int height){
+        JTextArea textArea = new JTextArea(sentence);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBounds(positionX, positionY, width, height);
+        textArea.setEditable(false);
+        panel.add(scrollPane);
+
+        return textArea;
+    }
+
+    /**
+     *
      * @param panel JPanel
      * @param positionY int
      * @return JTextField
