@@ -145,8 +145,9 @@ public class Purchase {
     public void setPurchaseDetails(){
         String[][] purchaseDetails = new String[this.purchaseDrugsQuantity.size()][5];
         int i = 0;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         for (Drug drug : this.purchaseDrugsQuantity.keySet()) {
-            purchaseDetails[i][0] = this.getPurchaseDate().toString();
+            purchaseDetails[i][0] = this.getPurchaseDate().format(formatter);
             purchaseDetails[i][1] = this.getPurchaseNumber().toString();
             if(this.withPrescription) {
                 purchaseDetails[i][2] = this.getPrescription().getCustomerLastName();
@@ -171,7 +172,8 @@ public class Purchase {
      */
     @Override
     public String toString() {
-        String stringToReturn = "\nDate: " + this.getPurchaseDate().toString() +
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String stringToReturn = "\nDate: " + this.getPurchaseDate().format(formatter) +
                 ", Numéro de commande: " + this.getPurchaseNumber();
         return stringToReturn;
     }
@@ -208,10 +210,11 @@ public class Purchase {
      */
     public static String[][] createpurchasesMatrice(){
         String[][] purchaseMatrice = new String[purchasesHistory.size()][5];
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         int i = 0;
         try {
             for (Purchase purchase : purchasesHistory) {
-                purchaseMatrice[i][0] = purchase.getPurchaseDate().toString();
+                purchaseMatrice[i][0] = purchase.getPurchaseDate().format(formatter);
                 purchaseMatrice[i][1] = purchase.getPurchaseNumber().toString();
                 if(!purchase.getWithPrescription()){
                     purchaseMatrice[i][2] = "sans ordonnance";

@@ -135,18 +135,20 @@ public class Drug {
      */
     public void setProductionDate(String productDate) throws InputException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String productionDate = productDate.trim();
+        String regexDate = "(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\\d{2}";
         LocalDate productionDateP =  null;
-        try{
+            if(productionDate.isEmpty() || !productionDate.matches(regexDate)) {
+                throw new InputException("La date de production est invalide (jj-mm-aaaa).");
+            }
             productionDateP = LocalDate.parse(productDate.trim(), formatter);
-        }catch(Exception e){
-            System.err.println(e.getMessage());
-        }
 
-        if(productionDateP == null || productionDateP.isAfter(LocalDate.now())){
-            throw new InputException("La date de production est invalide");
-        }else{
-            this.productionDate = productionDateP;
-        }
+            if (productionDateP.isAfter(LocalDate.now())) {
+                throw new InputException("La date de production doit être antérieure à la date d'aujourd'hui.");
+            } else {
+                this.productionDate = productionDateP;
+            }
+
     }
 
     /**
@@ -216,7 +218,7 @@ public class Drug {
      */
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return "\n\nNom: " + this.getName() +
                 "\nCatégorie: " + this.getCategoryName() +
                 "\nPrix: " + this.getPrice() +

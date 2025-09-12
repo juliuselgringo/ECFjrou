@@ -24,9 +24,9 @@ public class History {
         }
 
         Gui.labelMaker(panel, "Consulter les commandes d'une période:):",10,70);
-        Gui.labelMaker(panel, "Saisissez une date de début (AAAA-MM-JJ):",10,100);
+        Gui.labelMaker(panel, "Saisissez une date de début (jj-mm-aaaa):",10,100);
         JTextField startDateField = Gui.textFieldMaker(panel,10,130);
-        Gui.labelMaker(panel, "Saisissez une date de fin (AAAA-MM-JJ):",10,160);
+        Gui.labelMaker(panel, "Saisissez une date de fin (jj-mm-aaaa):",10,160);
         JTextField endDateField = Gui.textFieldMaker(panel,10,190);
         JButton searchButton = Gui.buttonMaker(panel,"Rechercher par période",220);
 

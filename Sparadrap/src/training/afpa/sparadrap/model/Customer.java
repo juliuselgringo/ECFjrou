@@ -35,7 +35,9 @@ public class Customer extends Person {
         this.mutual =  mutual;
         this.doctor = doctor;
         customersList.add(this);
-        customersList.sort(Comparator.comparing(Customer::getLastName));
+        try {
+            customersList.sort(Comparator.comparing(Customer::getLastName));
+        }catch(NullPointerException npe){};
         this.doctor.setDoctorCustomersList(this);
     }
 
@@ -105,9 +107,7 @@ public class Customer extends Person {
             Display.error(dtpe.getMessage());
             throw new InputException("Saisie date de naissance invalide");
         }
-        if(localDateOfBirth == null) {
-            throw new InputException("La date de naissance ne peut être nulle");
-        } else if (localDateOfBirth.isAfter(LocalDate.now())) {
+        if(localDateOfBirth.isAfter(LocalDate.now())) {
             throw new InputException("La date de naissance ne peut être postérieure à la date d'aujourd'hui");
         }else{
             this.dateOfBirth = localDateOfBirth;
@@ -169,7 +169,7 @@ public class Customer extends Person {
                 "\nNom: " + this.getLastName() +
                 "\nDate de naissance: " + this.getDateOfBirth().format(formatter) +
                 "\nTel:" + this.getContact().getPhone() +
-                "\nMutuelle: " + this.getMutual().getname() + " " + this.getMutual().getContact().getPostalCode() +
+                "\nMutuelle: " + this.getMutual().getName() + " " + this.getMutual().getContact().getPostalCode() +
                 "\nDocteur: " + this.getDoctor().getLastName() + " " + this.getDoctor().getContact().getPostalCode() + "\n";
     }
 
@@ -193,7 +193,7 @@ public class Customer extends Person {
             matrices[i][1] = customer.getLastName();
             matrices[i][2] = customer.getDateOfBirth().format(formatter);
             matrices[i][3] = customer.getContact().getPhone();
-            matrices[i][4] = customer.getMutual().getname() + " " + customer.getMutual().getContact().getPostalCode();
+            matrices[i][4] = customer.getMutual().getName() + " " + customer.getMutual().getContact().getPostalCode();
             matrices[i][5] = customer.getDoctor().getLastName() + " " + customer.getDoctor().getContact().getPostalCode();
             i++;
         }

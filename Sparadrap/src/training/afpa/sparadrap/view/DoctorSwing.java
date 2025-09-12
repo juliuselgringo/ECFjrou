@@ -157,7 +157,7 @@ public class DoctorSwing {
 
         JButton save = Gui.buttonMaker(panel, "Enregistrer", 450);
 
-        JButton back2Button = Gui.buttonMaker(panel, "Retour", 480);
+        JButton back2Button = Gui.buttonMaker(panel, "Annuler", 480);
         back2Button.addActionListener(ev -> {
             Doctor.doctorsList.remove(doctor);
             frame.dispose();

@@ -135,12 +135,22 @@ public class PurchaseSwing {
         JButton cancelButton = Gui.buttonMaker(panel,"Annuler",220);
         cancelButton.addActionListener(e ->  {
             cancelPurchase(newPurchase);
+            //suppression de la prescription de la liste du médecin
+            if(newPurchase.getWithPrescription()){
+                Doctor doctor = Doctor.searchDoctorByName(newPurchase.getPrescription().getDoctorLastName());
+                doctor.getDoctorPrescriptionsList().remove(newPurchase.getPrescription());
+            }
             frame.dispose();
         });
 
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 250);
         exitButton.addActionListener(e -> {
             cancelPurchase(newPurchase);
+            //suppression de la prescription de la liste du médecin
+            if(newPurchase.getWithPrescription()){
+                Doctor doctor = Doctor.searchDoctorByName(newPurchase.getPrescription().getDoctorLastName());
+                doctor.getDoctorPrescriptionsList().remove(newPurchase.getPrescription());
+            }
             System.exit(0);
         });
     }

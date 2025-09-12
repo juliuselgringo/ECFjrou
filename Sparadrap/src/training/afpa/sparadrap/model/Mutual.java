@@ -10,7 +10,6 @@ public class Mutual {
     private Contact contact;
     private Double rate;
 
-    private final String regexName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?";
     public static ArrayList<Mutual> mutualsList = new ArrayList<>();
     
     public Mutual(String name, Contact contact, Double rate) throws InputException {
@@ -24,7 +23,7 @@ public class Mutual {
      * GETTER name
      * @return String
      */
-    public String getname() {
+    public String getName() {
         return this.name;
     }
 
@@ -34,9 +33,10 @@ public class Mutual {
      * @throws InputException
      */
     public void setName(String name) throws InputException {
+        final String regexName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?([\\s][0-9]+)?";
         name = name.trim();
-        if(name == null || name.isEmpty()) {
-            throw new InputException("First name cannot be empty or null");
+        if(name.isEmpty()) {
+            throw new InputException("Le nom de la mutuelle ne peut être vide");
         } else if (!name.matches(regexName)) {
             throw new InputException("Le prénom doit commencer par une majuscule et ne doit pas avoir d'accent ni trait d'union");
         }else {
@@ -79,7 +79,7 @@ public class Mutual {
      */
     @Override
     public String toString() {
-        return "\nNom: " + this.getname() +
+        return "\nNom: " + this.getName() +
                 "\nCoordonnées:  " +
                 this.getContact() +
                 "\nTaux: " + this.getRate();

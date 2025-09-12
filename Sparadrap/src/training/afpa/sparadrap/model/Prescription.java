@@ -83,11 +83,13 @@ public class Prescription {
     public void setDoctorLastName(String doctorLastNameIn) throws InputException {
         String doctorLastNameInSt = doctorLastNameIn.trim();
         for (Doctor doctor : Doctor.doctorsList){
-            if (doctor.getLastName().equals(doctorLastNameInSt)){
-               this.doctorLastName = doctorLastNameInSt;
-               doctor.setDoctorPrescriptionsList(this);
-               return;
-            }
+            try {
+                if (doctor.getLastName().equals(doctorLastNameInSt)) {
+                    this.doctorLastName = doctorLastNameInSt;
+                    doctor.setDoctorPrescriptionsList(this);
+                    return;
+                }
+            }catch(NullPointerException npe){}
         }
         if(this.doctorLastName == null){
             throw new InputException("Ce medecin n'est pas enregistré.");
@@ -110,10 +112,12 @@ public class Prescription {
     public void setCustomerLastName(String customerLastNameIn) throws InputException {
         String customerLastNameInTrimed = customerLastNameIn.trim();
         for (Customer customer : Customer.customersList){
-            if (customer.getLastName().equals(customerLastNameInTrimed)){
-                this.customerLastName = customerLastNameInTrimed;
-                return;
-            }
+            try {
+                if (customer.getLastName().equals(customerLastNameInTrimed)) {
+                    this.customerLastName = customerLastNameInTrimed;
+                    return;
+                }
+            }catch(NullPointerException npe){}
         }
         if(this.customerLastName == null){
             throw new InputException("Ce client n'est pas enregistré.");

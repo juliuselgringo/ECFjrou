@@ -25,7 +25,9 @@ public class Doctor extends Person {
         super(firstName, lastName, contact);
         setAgreementId(agreementId);
         doctorsList.add(this);
-        doctorsList.sort(Comparator.comparing(Doctor::getLastName));
+        try {
+            doctorsList.sort(Comparator.comparing(Doctor::getLastName));
+        }catch(NullPointerException npe){};
     }
 
     /**
@@ -90,6 +92,11 @@ public class Doctor extends Person {
         return this.doctorPrescriptionsList;
     }
 
+    /**
+     * SETTER doctorPrescritpionList
+     * @param prescription Prescription
+     * @throws InputException
+     */
     public void setDoctorPrescriptionsList(Prescription prescription) throws InputException {
         for(Prescription p : doctorPrescriptionsList){
             if(p.equals(prescription)){
@@ -106,7 +113,7 @@ public class Doctor extends Person {
     @Override
     public String toString() {
         return "\nPrénom: " + this.getFirstName() +
-                "\n Nom: " + this.getLastName();
+                "\nNom: " + this.getLastName();
     }
 
     /**
@@ -132,8 +139,11 @@ public class Doctor extends Person {
             matrices[i][0] = doctor.getFirstName();
             matrices[i][1] = doctor.getLastName();
             matrices[i][2] = doctor.getAgreementId();
-            matrices[i][3] = doctor.getContact().getPhone();
-            matrices[i][4] = doctor.getContact().getEmail();
+            try {
+                matrices[i][3] = doctor.getContact().getPhone();
+                matrices[i][4] = doctor.getContact().getEmail();
+            }catch(NullPointerException npe){};
+
             i++;
         }
         return matrices;
@@ -176,6 +186,19 @@ public class Doctor extends Person {
         return matrices;
     }
 
-
+    /**
+     * CHERCHER UN MEDECIN A PARTIR DE SON NOM
+     * @param lastName String
+     * @return Doctor
+     */
+    public static Doctor searchDoctorByName(String lastName){
+        Doctor doctorToReturn = null;
+        for (Doctor doctor : doctorsList) {
+            if (doctor.getLastName().equals(lastName)) {
+                doctorToReturn = doctor;
+            }
+        }
+        return doctorToReturn;
+    }
 
 }

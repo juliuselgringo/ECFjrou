@@ -10,6 +10,7 @@ import training.afpa.sparadrap.model.Doctor;
 import training.afpa.sparadrap.model.Mutual;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,12 +27,13 @@ class CustomerTest {
         Contact jeDup75 = new Contact("12 Rue de Paris", "75000", "Paris",
                 "01 23 45 67 89", "jean.dupont@medecin.fr");
         Doctor jeDupParis = new Doctor("Jean", "Dupont", jeDup75,"12345678901");
-        Customer customer = new Customer("Jojo", "Ducont",contact,"123456789012345","2000-10-10",mgenLyon,jeDupParis);
+        Customer customer = new Customer("Jojo", "Ducont",contact,"123456789012345","10-10-2000",mgenLyon,jeDupParis);
         assertEquals("Jojo", customer.getFirstName());
         assertEquals("Ducont", customer.getLastName());
         assertInstanceOf(Contact.class, customer.getContact());
         assertEquals("123456789012345", customer.getSocialSecurityId());
-        assertEquals("2000-10-10", customer.getDateOfBirth().toString());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        assertEquals("10-10-2000", customer.getDateOfBirth().format(formatter));
         assertInstanceOf(Mutual.class, customer.getMutual());
         assertInstanceOf(Doctor.class, customer.getDoctor());
     }
