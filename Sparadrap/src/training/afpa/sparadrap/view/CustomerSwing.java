@@ -35,12 +35,13 @@ public class CustomerSwing {
             displayCustomer(customer);
         });
 
-        modifyButton.addActionListener(ev -> modifyCustomer(((Customer) customerBox.getSelectedItem()),frame));
+        modifyButton.addActionListener(ev -> formCustomer(((Customer) customerBox.getSelectedItem()),
+                "modify", frame));
 
         deleteButton.addActionListener(eve ->{
             Customer customer = (Customer)customerBox.getSelectedItem();
             try {
-                deleteCustomer(customer);
+                deleteCustomer(customer, frame);
             } catch (InputException e) {
                 throw new RuntimeException(e);
             }
@@ -62,12 +63,6 @@ public class CustomerSwing {
                     displayCustomer(customer);
                 }
             }
-        });
-
-        JButton updatePage = Gui.buttonMaker(panel,"Raffraichir la page",830);
-        updatePage.addActionListener(ev -> {
-           frame.dispose();
-           customerMenu();
         });
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",490);
@@ -123,10 +118,13 @@ public class CustomerSwing {
     }
 
     /**
-     * FORMULAIRE DE MODIFICATION DES INFOS CLIENTS
+     * FORMULAIRE POUR MODIFIER OU CREER UN CLIENTS
+     * String type "modify" ou "create"
      * @param customer Customer
+     * @param type String
+     * @param frame1 JFrame
      */
-    public static void modifyCustomer(Customer customer, JFrame frame1) {
+    public static void formCustomer(Customer customer, String type, JFrame frame1) {
         JFrame frame = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frame);
         Contact contact = customer.getContact();
@@ -187,13 +185,19 @@ public class CustomerSwing {
 
         JButton back2Button = Gui.buttonMaker(panel,"Annuler",480);
         back2Button.addActionListener(ev -> {
-            Customer.customersList.remove(customer);
+            if(type.equals("create")) {
+                Customer.customersList.remove(customer);
+            }
             frame.dispose();
+            frame1.dispose();
+            customerMenu();
         });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
-            Customer.customersList.remove(customer);
+            if(type.equals("create")) {
+                Customer.customersList.remove(customer);
+            }
             System.exit(0);
         });
 
@@ -233,7 +237,7 @@ public class CustomerSwing {
         Contact contact = new Contact();
         Customer customer = new Customer();
         customer.setContact(contact);
-        modifyCustomer(customer,frame);
+        formCustomer(customer, "create",frame);
     }
 
     /**
@@ -241,7 +245,7 @@ public class CustomerSwing {
      * @param customer Customer
      * @throws InputException
      */
-    public static void deleteCustomer(Customer customer) throws InputException {
+    public static void deleteCustomer(Customer customer, JFrame frame1) throws InputException {
         int resp = JOptionPane.showConfirmDialog(null,
                 "Etes vous sur de vouloir supprimer ce client" + customer.getLastName(),
                 "Confirmation", JOptionPane.YES_NO_OPTION);
@@ -251,6 +255,8 @@ public class CustomerSwing {
             JOptionPane.showMessageDialog(null, "Le client a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
         }
+        frame1.dispose();
+        customerMenu();
     }
 
 }

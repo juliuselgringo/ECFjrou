@@ -128,6 +128,10 @@ public class PurchaseSwing {
 
         saveButton.addActionListener(e -> {
             newPurchase.setPurchaseDetails();
+            if(newPurchase.getWithPrescription()){
+                Customer customer = Customer.getCustomerByLastName(newPurchase.getPrescription().getCustomerLastName());
+                customer.setCustomerPrescriptionsList(newPurchase.getPrescription());
+            }
             JOptionPane.showMessageDialog(null, "La commande a été enregistré avec succès");
             frame.dispose();
         });

@@ -138,7 +138,7 @@ public class Drug {
         String productionDate = productDate.trim();
         String regexDate = "(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\\d{2}";
         LocalDate productionDateP =  null;
-            if(productionDate.isEmpty() || !productionDate.matches(regexDate)) {
+            if(productionDate == null ||productionDate.isEmpty() || !productionDate.matches(regexDate)) {
                 throw new InputException("La date de production est invalide (jj-mm-aaaa).");
             }
             productionDateP = LocalDate.parse(productDate.trim(), formatter);

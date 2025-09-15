@@ -33,5 +33,11 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="pdfbox-app-3.0.5" level="project" />
+    <orderEntry type="library" name="fontbox-3.0.5" level="project" />
+    <orderEntry type="library" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" name="fontbox-3.0.1" level="project" />
+    <orderEntry type="library" name="pdfbox-3.0.1" level="project" />
+    <orderEntry type="library" name="slf4j-api-2.0.7" level="project" />
   </component>
 </module>

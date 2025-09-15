@@ -35,7 +35,7 @@ public class Mutual {
     public void setName(String name) throws InputException {
         final String regexName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?([\\s][0-9]+)?";
         name = name.trim();
-        if(name.isEmpty()) {
+        if(name.isEmpty() || name == null) {
             throw new InputException("Le nom de la mutuelle ne peut être vide");
         } else if (!name.matches(regexName)) {
             throw new InputException("Le prénom doit commencer par une majuscule et ne doit pas avoir d'accent ni trait d'union");
@@ -80,8 +80,29 @@ public class Mutual {
     @Override
     public String toString() {
         return "\nNom: " + this.getName() +
-                "\nCoordonnées:  " +
+                "\n" +
                 this.getContact() +
                 "\nTaux: " + this.getRate();
+    }
+
+    /**
+     * CREER UNE MATRICE DES MUTUELLES
+     * @return String[][]
+     */
+    public static String[][] createMutualMatrice(){
+        String[][] matrice = new String[Mutual.mutualsList.size()][7];
+        int i = 0;
+        for(Mutual mutual : Mutual.mutualsList){
+            matrice[i][0] = mutual.getName();
+            matrice[i][1] = mutual.getContact().getAddress();
+            matrice[i][2] = mutual.getContact().getPostalCode();
+            matrice[i][3] = mutual.getContact().getTown();
+            matrice[i][4] = mutual.getContact().getPhone();
+            matrice[i][5] = mutual.getContact().getEmail();
+            matrice[i][6] = mutual.getRate().toString();
+
+            i++;
+        }
+        return matrice;
     }
 }

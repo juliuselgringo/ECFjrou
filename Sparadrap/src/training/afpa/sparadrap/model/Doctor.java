@@ -113,7 +113,7 @@ public class Doctor extends Person {
     @Override
     public String toString() {
         return "\nPrénom: " + this.getFirstName() +
-                "\nNom: " + this.getLastName();
+                "\n Nom: " + this.getLastName();
     }
 
     /**

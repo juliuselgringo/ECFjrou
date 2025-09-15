@@ -37,12 +37,13 @@ public class DoctorSwing {
             displayDoctor(doctor);
         });
 
-        modifyButton.addActionListener(e2 -> modifyDoctor((Doctor) doctorBox.getSelectedItem(),frame));
+        modifyButton.addActionListener(e2 -> formDoctor((Doctor) doctorBox.getSelectedItem(),
+                "modify", frame));
 
         deleteButton.addActionListener(e3 ->{
             Doctor doctor= (Doctor)doctorBox.getSelectedItem();
             try {
-                deleteDoctor(doctor);
+                deleteDoctor(doctor, frame);
             } catch (InputException e) {
                 throw new RuntimeException(e);
             }
@@ -84,11 +85,6 @@ public class DoctorSwing {
         JButton exitButton = Gui.buttonMaker(panel, "Quitter", 520);
         exitButton.addActionListener(e -> System.exit(0));
 
-        JButton updatePage = Gui.buttonMaker(panel,"Raffraichir la page",830);
-        updatePage.addActionListener(ev -> {
-            frame.dispose();
-            doctorMenu();
-        });
     }
 
     /**
@@ -117,7 +113,14 @@ public class DoctorSwing {
         exitButton2.addActionListener(eve -> System.exit(0));
     }
 
-    public static void modifyDoctor(Doctor doctor, JFrame frame1) {
+    /**
+     * FORMULAIRE POUR MODIFIER OU CREER UN MEDECIN
+     * String type "create" ou "momdify"
+     * @param doctor Doctor
+     * @param type String
+     * @param frame1 JFrame
+     */
+    public static void formDoctor(Doctor doctor, String type, JFrame frame1) {
         JFrame frame = Gui.setPopUpFrame(800, 1000);
         JPanel panel = Gui.setPanel(frame);
         Contact contact = doctor.getContact();
@@ -159,13 +162,19 @@ public class DoctorSwing {
 
         JButton back2Button = Gui.buttonMaker(panel, "Annuler", 480);
         back2Button.addActionListener(ev -> {
-            Doctor.doctorsList.remove(doctor);
+            if (type.equals("create")) {
+                Doctor.doctorsList.remove(doctor);
+            }
+            frame1.dispose();
             frame.dispose();
+            doctorMenu();
         });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
-            Doctor.doctorsList.remove(doctor);
+            if (type.equals("create")) {
+                Doctor.doctorsList.remove(doctor);
+            }
             System.exit(0);
         });
 
@@ -192,14 +201,24 @@ public class DoctorSwing {
         });
     }
 
+    /**
+     * CRER UN MEDECIN
+     * @param frame JFrame
+     * @throws InputException
+     */
     public static void createDoctor(JFrame frame) throws InputException {
         Contact contact = new Contact();
         Doctor doctor= new Doctor();
         doctor.setContact(contact);
-        modifyDoctor(doctor,frame);
+        formDoctor(doctor, "create",frame);
     }
 
-    public static void deleteDoctor(Doctor doctor) throws InputException {
+    /**
+     * SUPPRIMER UN MEDECIN
+     * @param doctor Doctor
+     * @throws InputException
+     */
+    public static void deleteDoctor(Doctor doctor, JFrame frame1) throws InputException {
         int resp = JOptionPane.showConfirmDialog(null,
                 "Etes vous sur de vouloir supprimer ce médecin" + doctor.getLastName(),
                 "Confirmation", JOptionPane.YES_NO_OPTION);
@@ -208,8 +227,14 @@ public class DoctorSwing {
             JOptionPane.showMessageDialog(null, "Le médecin a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
         }
+        frame1.dispose();
+        doctorMenu();
     }
 
+    /**
+     * AFFICHER LA LISTE DES PATIENTS D UN MEDECIN
+     * @param doctor Doctor
+     */
     public static void displayDoctorCustomersList(Doctor doctor){
         JFrame frame2 = Gui.setPopUpFrame(800,500);
         frame2.setTitle("Liste des patients");
@@ -224,6 +249,10 @@ public class DoctorSwing {
         exitButton.addActionListener(e -> System.exit(0));
     }
 
+    /**
+     * AFFICHER LE LISTE DES PRESCRIPTION D UN MEDECIN
+     * @param doctor Doctor
+     */
     public static void displayDoctorPrescriptionsList(Doctor doctor){
         JFrame frame = Gui.setPopUpFrame(800,500);
         JPanel panel = Gui.setPanel(frame);

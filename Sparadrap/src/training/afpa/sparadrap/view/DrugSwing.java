@@ -14,6 +14,7 @@ public class DrugSwing {
         JFrame frame = Gui.setFrame();
         JPanel panel = Gui.setPanel(frame);
 
+        Gui.labelMaker(panel,"Sélectionner un médicament dans le tableau: ",10,10);
         JTable table = setTable(panel);
 
         JButton detailButton = Gui.buttonMaker(panel,"Détails du médicament", 130);
@@ -33,7 +34,7 @@ public class DrugSwing {
             int row = table.getSelectedRow();
             if(row >= 0) {
                 Drug drug = Drug.drugsList.get(row);
-                modifyDrug(drug, frame);
+                formDrug(drug, "modify", frame);
             }
         });
 
@@ -73,7 +74,14 @@ public class DrugSwing {
         exitButton2.addActionListener(eve -> System.exit(0));
     }
 
-    public static void modifyDrug(Drug drug, JFrame frame1){
+    /**
+     * FORMULAIRE POUR MODIFIER OU CREER UN MEDICAMENT
+     * type String "modify" ou "create"
+     * @param drug Drug
+     * @param type String
+     * @param frame1 JFrame
+     */
+    public static void formDrug(Drug drug, String type,JFrame frame1){
         JFrame frame = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frame);
 
@@ -111,14 +119,19 @@ public class DrugSwing {
 
         JButton back2Button = Gui.buttonMaker(panel,"Annuler",480);
         back2Button.addActionListener(ev -> {
-            Drug.drugsList.remove(drug);
+            if(type.equals("create")){
+                Drug.drugsList.remove(drug);
+            }
+            frame1.dispose();
             frame.dispose();
-
+            drugMenu();
         });
 
         JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 510);
         exitButton2.addActionListener(eve -> {
-            Drug.drugsList.remove(drug);
+            if(type.equals("create")){
+                Drug.drugsList.remove(drug);
+            }
             System.exit(0);
         });
 
@@ -143,6 +156,11 @@ public class DrugSwing {
         });
     }
 
+    /**
+     * SUPPRIMER UN MEDICAMENT
+     * @param drug Drug
+     * @param frame JFrame
+     */
     public static void deleteDrug(Drug drug, JFrame frame){
         int resp = JOptionPane.showConfirmDialog(null,"Etes vous sur de vouloir supprimer ce médicament?",
                 "Confirmation",JOptionPane.YES_NO_OPTION);
@@ -153,7 +171,8 @@ public class DrugSwing {
             frame.dispose();
             drugMenu();
         }
-
+        frame.dispose();
+        drugMenu();
     }
 
     public static JTable setTable(JPanel panel){
@@ -166,6 +185,6 @@ public class DrugSwing {
 
     public static void createDrug(JFrame frame){
         Drug drug = new Drug();
-        modifyDrug(drug, frame);
+        formDrug(drug, "create", frame);
     }
 }

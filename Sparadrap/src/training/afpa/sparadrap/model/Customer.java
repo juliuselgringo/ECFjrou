@@ -15,6 +15,7 @@ public class Customer extends Person {
     private LocalDate dateOfBirth;
     private Mutual mutual;
     private Doctor doctor;
+    private ArrayList<Prescription> customerPrescriptionsList = new ArrayList();
 
     private static final String regexSocialSecurityId = "\\d{15}";
     public static ArrayList<Customer> customersList = new ArrayList<>();
@@ -149,6 +150,23 @@ public class Customer extends Person {
     }
 
     /**
+     *  GETTER customerPrescriptionsList
+     * @return ArrayList
+     */
+    public ArrayList getCustomerPrescriptionsList() {
+        return customerPrescriptionsList;
+    }
+
+    /**
+     * SETTER customerPrescriptionsList
+     * @param prescription Prescription
+     */
+    public void setCustomerPrescriptionsList(Prescription prescription) {
+        this.customerPrescriptionsList.add(prescription);
+    }
+
+
+    /**
      * TO STRING
      * @return String
      */
@@ -199,5 +217,37 @@ public class Customer extends Person {
         }
         return matrices;
     }
+
+    /**
+     * RECHERCHER UN CLIENT PAR SON NOM DE FAMILLE
+     * @param lastName
+     * @return
+     */
+    public static Customer getCustomerByLastName(String lastName){
+        Customer customerToReturn = null;
+        for (Customer customer : customersList) {
+            if (customer.getLastName().equals(lastName)){
+                customerToReturn = customer;
+            }
+        }
+        return customerToReturn;
+    }
+
+    /**
+     * CREER UNE MATRICE DES PRESCRIPTION D UN CLIENT
+     * @return String[][]
+     */
+    public String[][] createCustomerPrescriptionsMatrice(){
+        String[][] matrice = new String[this.customerPrescriptionsList.size()][3];
+        int i = 0;
+        for(Prescription prescription : this.customerPrescriptionsList){
+            matrice[i][0] = prescription.getPrescriptionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            matrice[i][1] = prescription.getCustomerLastName();
+            matrice[i][2] = prescription.getDoctorLastName();
+            i++;
+        }
+        return matrice;
+    }
+
 
 }

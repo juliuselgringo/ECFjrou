@@ -30,7 +30,7 @@ public class History {
         JTextField endDateField = Gui.textFieldMaker(panel,10,190);
         JButton searchButton = Gui.buttonMaker(panel,"Rechercher par période",220);
 
-        String[] headers = new String[] {"Date", "Number", "Nom du client"};
+        String[] headers = new String[] {"Date", "N° de commande", "Nom du client"};
         JTable table = Gui.tableMaker(panel, Purchase.createpurchasesMatrice(),headers,500,100,800,300);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 

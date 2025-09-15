@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.model.*;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,10 +66,11 @@ class PurchaseTest {
         Customer testCustomer = new Customer("Jul","Jul", alLef75,"123456789012345",
                 "10-10-2000",harmonie75,jeDupParis);
         Prescription testPresc = new Prescription("01-01-2025","Dupont","Jul");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         testPurchase.setPrescrition(testPresc);
         testPurchase.setPurchaseDrugsQuantity(dafalgan, 10);
         testPurchase.setPurchaseDetails();
-        assertEquals("12-09-2025", testPurchase.getPurchaseDetails()[0][0].toString());
+        assertEquals(LocalDate.now().format(formatter), testPurchase.getPurchaseDetails()[0][0].toString());
     }
 
 

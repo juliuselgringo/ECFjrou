@@ -123,7 +123,7 @@ public class Purchase {
      */
     public void setPurchaseDrugsQuantity(Drug drug, int quantity) {
         if(this.withPrescription){
-            this.prescription.setDrugsQuantityPrescriptionsList(drug,quantity);
+            this.prescription.setDrugsQuantityPrescriptionList(drug,quantity);
             this.purchaseDrugsQuantity = this.prescription.getDrugsQuantityPrescriptionList();
         }else {
             this.purchaseDrugsQuantity.put(drug, quantity);
@@ -139,8 +139,7 @@ public class Purchase {
     }
 
     /**
-     * SETTER purchaseDateDrugsQuantities
-     * @return String[][]
+     * SETTER purchaseDetails
      */
     public void setPurchaseDetails(){
         String[][] purchaseDetails = new String[this.purchaseDrugsQuantity.size()][5];

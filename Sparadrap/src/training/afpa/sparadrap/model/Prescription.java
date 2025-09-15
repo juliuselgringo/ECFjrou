@@ -1,5 +1,6 @@
 package training.afpa.sparadrap.model;
 
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import javax.swing.*;
@@ -8,6 +9,16 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class Prescription {
 
@@ -125,7 +136,7 @@ public class Prescription {
     }
 
     /**
-     * GETTER drugsPrescriptionList
+     * GETTER drugsDrugsQuantityPrescriptionList
      * @return Map<Drug, Integer>
      */
     public Map<Drug, Integer> getDrugsQuantityPrescriptionList() {
@@ -133,10 +144,10 @@ public class Prescription {
     }
 
     /**
-     * SETTER drugsPrescritionList
+     * SETTER drugsDrugsQuantityPrescritionList
      * @param drug Drug
      */
-    public void setDrugsQuantityPrescriptionsList(Drug drug, int quantity) {
+    public void setDrugsQuantityPrescriptionList(Drug drug, int quantity) {
         this.drugsQuantityPrescriptionsList.put(drug,quantity);
     }
 
@@ -146,7 +157,34 @@ public class Prescription {
         return "Date: " + this.getPrescriptionDate().format(formatter) +
                 "\nNom du medecin: " + this.getDoctorLastName() +
                 "\nNom du client:  " + this.getCustomerLastName() +
-                "\nListe des médicament: " + this.getDrugsQuantityPrescriptionList().toString() + '}';
+                "\nListe des médicament: " + this.getDrugsQuantityToString() + '}';
+    }
+
+    public String getDrugsQuantityToString() {
+        String stringToReturn = "";
+        for (Map.Entry<Drug,Integer> entry : this.getDrugsQuantityPrescriptionList().entrySet()){
+            stringToReturn += entry.getKey().toString() + " : " + entry.getValue().toString() + " qté(s)\n";
+        }
+        return stringToReturn;
+    }
+
+    public void createPDFprescription() throws IOException {
+        String pathHistoric = "C:\\Users\\DEV01\\OneDrive - AFPA\\Documents\\ECFjrou\\Sparadrap\\src\\training\\afpa\\sparadrap\\historique";
+        try(PDDocument document = new PDDocument()){
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+
+            PDType0Font font = PDType0Font.load(document, new File("src/training/afpa/sparadrap/font/arial.ttf"));
+
+            try(PDPageContentStream contentStream = new PDPageContentStream(document, page)){
+
+                contentStream.beginText();
+                contentStream.setFont(font, 12);
+                contentStream.newLineAtOffset(50, 50);
+                contentStream.showText(this.toString());
+            }
+        }
     }
 
 }

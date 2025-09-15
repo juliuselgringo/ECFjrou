@@ -86,7 +86,7 @@ class DoctorTest {
                 "01 23 45 67 89", "jean.dupont@medecin.fr");
         Doctor jeDupParis = new Doctor("Jean", "Dupont", jeDup75,"12345678901");
         assertEquals("\nPrénom: " + "Jean" +
-                "\nNom: " + "Dupont", jeDupParis.toString());
+                "\n Nom: " + "Dupont", jeDupParis.toString());
     }
 
     @Test
