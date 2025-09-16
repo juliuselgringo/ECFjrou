@@ -6,6 +6,7 @@ import training.afpa.sparadrap.model.Prescription;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.List;
 
 public class PrescriptionSwing {
@@ -36,12 +37,19 @@ public class PrescriptionSwing {
         exitButton.addActionListener(e -> System.exit(0));
     }
 
+    /**
+     * AFFICHE LES DETAILS D UNE PRESCRIPTION
+     * @param prescription
+     */
     public static void displayPrescription(Prescription prescription) {
         JFrame frame = Gui.setPopUpFrame(800,500);
         frame.setTitle("Détails de la prescription");
         JPanel panel = Gui.setPanel(frame);
 
         Gui.textAreaMakerScroll(panel, prescription.toString(),10,10,500,300);
+
+        JButton openPdf = Gui.buttonMaker(panel,"Ouvrir le PDF", 320);
+        openPdf.addActionListener(e -> prescription.openPdfPrescription());
 
         JButton backButton = Gui.buttonMaker(panel,"Retour",350);
         backButton.addActionListener(ev -> frame.dispose());
@@ -50,6 +58,9 @@ public class PrescriptionSwing {
         exitButton.addActionListener(e -> System.exit(0));
     }
 
+    /**
+     * AFFICHE UNE RECHERCHE DE LISTE DES PRESCRIPTIONS PAR CLIENT
+     */
     public static void displayPrescriptionList() {
         JFrame frame = Gui.setPopUpFrame(800,700);
         frame.setTitle("Détails de la prescription");

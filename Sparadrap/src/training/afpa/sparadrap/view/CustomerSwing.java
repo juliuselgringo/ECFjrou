@@ -127,7 +127,9 @@ public class CustomerSwing {
     public static void formCustomer(Customer customer, String type, JFrame frame1) {
         JFrame frame = Gui.setPopUpFrame(800,1000);
         JPanel panel = Gui.setPanel(frame);
+
         Contact contact = customer.getContact();
+
         Gui.labelMaker(panel,"Prénom: ",10,10);
         JTextField firstNameField = Gui.textFieldMaker(panel,10,40);
         firstNameField.setText(customer.getFirstName());

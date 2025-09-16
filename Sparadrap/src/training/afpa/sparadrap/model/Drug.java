@@ -17,6 +17,7 @@ public class Drug {
     private LocalDate productionDate;
     private int quantity;
     private Boolean underPrescription;
+    private Integer totalOut = 0;
 
     private final String regexName = "[A-Z][a-z]+([\\s][A-Z][a-z]+)?([\\s][0-9]+)?";
 
@@ -213,6 +214,27 @@ public class Drug {
     }
 
     /**
+     * GETTER totalOut
+     * @return Integer
+     */
+    public Integer getTotalOut(){
+        return this.totalOut;
+    }
+
+    /**
+     * SETTER totalOut
+     * @param totalOut Integer
+     * @throws InputException
+     */
+    public void setTotalOut(Integer totalOut) throws InputException {
+        if(totalOut == null || totalOut < 0){
+            throw new InputException("La quantité ne peux être négative ou nul");
+        }else{
+            this.totalOut = totalOut;
+        }
+    }
+
+    /**
      * TO STRING
      * @return String
      */
@@ -225,6 +247,15 @@ public class Drug {
                 "\nDate de production: " + this.getProductionDate().format(formatter) +
                 "\nQuantité en stock: " + this.getQuantity() +
                 "\nUnderPrescription: " + this.isUnderPrescription();
+    }
+
+    /**
+     * TO STRING SANS RETOUR CHARIOT POUR LE PDF
+     * @return
+     */
+    public String toStringForPdf(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return " // " + this.getName();
     }
 
     /**

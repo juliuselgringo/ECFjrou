@@ -5,6 +5,7 @@ import training.afpa.sparadrap.model.*;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Map;
 
@@ -131,6 +132,11 @@ public class PurchaseSwing {
             if(newPurchase.getWithPrescription()){
                 Customer customer = Customer.getCustomerByLastName(newPurchase.getPrescription().getCustomerLastName());
                 customer.setCustomerPrescriptionsList(newPurchase.getPrescription());
+                try {
+                    newPurchase.getPrescription().savePrescriptionAsPdf();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             JOptionPane.showMessageDialog(null, "La commande a été enregistré avec succès");
             frame.dispose();

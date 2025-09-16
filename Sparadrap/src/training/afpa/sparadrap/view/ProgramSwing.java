@@ -13,7 +13,7 @@ public class ProgramSwing {
         purchaseMenu.addActionListener(e -> PurchaseSwing.purchase());
 
         JButton purchaseHistory = Gui.buttonMaker(panel, "Historique des Achats", 40);
-        purchaseHistory.addActionListener(e -> History.history());
+        purchaseHistory.addActionListener(e -> HistorySwing.history());
 
         JButton doctor = Gui.buttonMaker(panel, "Médecins", 70);
         doctor.addActionListener(e -> DoctorSwing.doctorMenu());

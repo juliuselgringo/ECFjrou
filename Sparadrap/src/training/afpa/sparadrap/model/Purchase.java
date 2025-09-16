@@ -207,7 +207,7 @@ public class Purchase {
      * CREER UNE MATRICE DES ACHATS
      * @return
      */
-    public static String[][] createpurchasesMatrice(){
+    public static String[][] createPurchasesMatrice(){
         String[][] purchaseMatrice = new String[purchasesHistory.size()][5];
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         int i = 0;

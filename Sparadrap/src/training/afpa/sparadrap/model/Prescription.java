@@ -4,21 +4,22 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.text.PDFTextStripper;
+import training.afpa.sparadrap.utility.Display;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Prescription {
 
@@ -27,6 +28,7 @@ public class Prescription {
     private String customerLastName;
     private Map<Drug, Integer> drugsQuantityPrescriptionsList = new HashMap<>();
     public Integer purchaseNumber;
+    private String pathPdf;
 
     /**
      * CONSTRUCTOR
@@ -136,7 +138,7 @@ public class Prescription {
     }
 
     /**
-     * GETTER drugsDrugsQuantityPrescriptionList
+     * GETTER getDrugsQuantityPrescriptionList
      * @return Map<Drug, Integer>
      */
     public Map<Drug, Integer> getDrugsQuantityPrescriptionList() {
@@ -151,6 +153,14 @@ public class Prescription {
         this.drugsQuantityPrescriptionsList.put(drug,quantity);
     }
 
+    public void setPathPdf(String pathPdf){
+        this.pathPdf = pathPdf;
+    }
+
+    /**
+     * TO STRING
+     * @return String
+     */
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -160,30 +170,83 @@ public class Prescription {
                 "\nListe des médicament: " + this.getDrugsQuantityToString() + '}';
     }
 
+    public String toStringForPdf(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return " // " + this.getPrescriptionDate().format(formatter) +
+                " / Medecin: " + this.getDoctorLastName() +
+                " / Client:  " + this.getCustomerLastName() +
+                " / Médicaments: " + this.getDrugsQuantityToString();
+    }
+
     public String getDrugsQuantityToString() {
         String stringToReturn = "";
         for (Map.Entry<Drug,Integer> entry : this.getDrugsQuantityPrescriptionList().entrySet()){
-            stringToReturn += entry.getKey().toString() + " : " + entry.getValue().toString() + " qté(s)\n";
+            stringToReturn += entry.getKey().toStringForPdf() + " : " + entry.getValue().toString() + " qté(s)";
         }
         return stringToReturn;
     }
 
-    public void createPDFprescription() throws IOException {
-        String pathHistoric = "C:\\Users\\DEV01\\OneDrive - AFPA\\Documents\\ECFjrou\\Sparadrap\\src\\training\\afpa\\sparadrap\\historique";
+    public void savePrescriptionAsPdf() throws IOException {
+        String pathHistoric = "C:\\Users\\DEV01\\OneDrive - AFPA\\Documents\\ECFjrou\\Sparadrap\\src\\historic\\"
+                + this.getCustomerLastName() + this.prescriptionDate + ".pdf";
         try(PDDocument document = new PDDocument()){
             PDPage page = new PDPage();
             document.addPage(page);
 
-
-            PDType0Font font = PDType0Font.load(document, new File("src/training/afpa/sparadrap/font/arial.ttf"));
+            PDType0Font font = PDType0Font.load(document,
+                    new File("C:\\Users\\DEV01\\OneDrive - AFPA\\Documents\\ECFjrou\\Sparadrap\\src\\training\\afpa\\sparadrap\\fonts\\arial.ttf"));
 
             try(PDPageContentStream contentStream = new PDPageContentStream(document, page)){
 
                 contentStream.beginText();
                 contentStream.setFont(font, 12);
-                contentStream.newLineAtOffset(50, 50);
-                contentStream.showText(this.toString());
+
+                List<String> lines = sliceTextForPdf(this.toStringForPdf(),100);
+                contentStream.newLineAtOffset(50, 700);
+
+                for (String line : lines){
+                    contentStream.showText(line);
+                    contentStream.newLineAtOffset(0, -20);
+                }
+                contentStream.endText();
+
             }
+
+            document.save(pathHistoric);
+            this.setPathPdf(pathHistoric);
+            JOptionPane.showMessageDialog(null,"PDF créé !");
+
+        }catch(IOException ioe){
+            System.err.println("erreur : " + ioe.getMessage());
+        }
+    }
+
+    public static List<String> sliceTextForPdf(String text, int lineMax){
+        List<String> stringToReturn = new ArrayList<>();
+        int index = 0;
+        while(index < text.length()){
+            int endLine = Math.min(text.length(), index + lineMax);
+            stringToReturn.add(text.substring(index, endLine));
+            index = endLine;
+
+        }
+        return stringToReturn;
+    }
+
+    public void openPdfPrescription(){
+        try{
+            File pdfFile = new File(this.pathPdf);
+            if(pdfFile.exists()){
+                if(Desktop.isDesktopSupported()){
+                    Desktop.getDesktop().open(pdfFile);
+                }else{
+                    Display.error("Desktop n'est pas supporté");
+                }
+            }else{
+                Display.error("Le fichier n'existe pas");
+            }
+        }catch(IOException ioe){
+            ioe.printStackTrace();
         }
     }
 

@@ -34,6 +34,7 @@ public class Customer extends Person {
         setSocialSecurityId(socialSecurityId);
         setDateOfBirth(dateOfBirth);
         this.mutual =  mutual;
+        this.mutual.mutualCustomersList.add(this);
         this.doctor = doctor;
         customersList.add(this);
         try {
@@ -130,6 +131,7 @@ public class Customer extends Person {
      */
     public void setMutual(Mutual mutual) throws InputException {
         this.mutual = mutual;
+        this.mutual.mutualCustomersList.add(this);
     }
 
     /**

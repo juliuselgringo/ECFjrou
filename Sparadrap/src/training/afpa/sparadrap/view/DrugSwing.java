@@ -175,6 +175,11 @@ public class DrugSwing {
         drugMenu();
     }
 
+    /**
+     * CREER UN TABLEAU DES MEDICAMENTS
+     * @param panel JPanel
+     * @return Jtable
+     */
     public static JTable setTable(JPanel panel){
         String[] header = new String[]{"Nom","Catégorie","Prix","Date de Production","Quantité", "Sous prescription"};
         JTable table = Gui.tableMaker(panel, Drug.createDrugsMatrice(),header,800, 40,800,800);
@@ -183,8 +188,13 @@ public class DrugSwing {
         return table;
     }
 
+    /**
+     *
+     * @param frame
+     */
     public static void createDrug(JFrame frame){
         Drug drug = new Drug();
         formDrug(drug, "create", frame);
     }
+
 }
