@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Sparadrap/out/production/Sparadrap/training/afpa/sparadrap/lib/fontbox-2.0.27.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Sparadrap/out/production/Sparadrap/training/afpa/sparadrap/lib/pdfbox-2.0.27.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Sparadrap/out/production/Sparadrap/training/afpa/sparadrap/lib/commons-logging-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

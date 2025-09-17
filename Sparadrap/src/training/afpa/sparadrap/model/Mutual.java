@@ -129,6 +129,10 @@ public class Mutual {
         return matrice;
     }
 
+    /**
+     * CREER UNE MATRICE DE LA LISTE DE CLIENT D UNE MUTUELLE
+     * @return
+     */
     public String[][] getMutualCustomersListMatrice(){
         String[][] matrice = new String[Mutual.mutualsList.size()][5];
         int i = 0;
@@ -142,4 +146,5 @@ public class Mutual {
         }
         return matrice;
     }
+
 }

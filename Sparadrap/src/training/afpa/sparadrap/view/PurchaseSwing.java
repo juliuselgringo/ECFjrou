@@ -130,7 +130,12 @@ public class PurchaseSwing {
         saveButton.addActionListener(e -> {
             newPurchase.setPurchaseDetails();
             if(newPurchase.getWithPrescription()){
-                Customer customer = Customer.getCustomerByLastName(newPurchase.getPrescription().getCustomerLastName());
+                Customer customer = null;
+                try {
+                    customer = Customer.getCustomerByLastName(newPurchase.getPrescription().getCustomerLastName());
+                } catch (InputException ex) {
+                    throw new RuntimeException(ex);
+                }
                 customer.setCustomerPrescriptionsList(newPurchase.getPrescription());
                 try {
                     newPurchase.getPrescription().savePrescriptionAsPdf();

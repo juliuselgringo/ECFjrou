@@ -5,6 +5,7 @@ import training.afpa.sparadrap.ExceptionTracking.InputException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -153,8 +154,20 @@ public class Prescription {
         this.drugsQuantityPrescriptionsList.put(drug,quantity);
     }
 
+    /**
+     * GETTER pathPdf
+     * @return pathPdf String
+     */
+    public String getPathPdf(){
+        return this.pathPdf;
+    }
+
+    /**
+     * SETTER pathPdf
+     * @param pathPdf String
+     */
     public void setPathPdf(String pathPdf){
-        this.pathPdf = pathPdf;
+        this.pathPdf = pathPdf.trim();
     }
 
     /**
@@ -167,9 +180,13 @@ public class Prescription {
         return "Date: " + this.getPrescriptionDate().format(formatter) +
                 "\nNom du medecin: " + this.getDoctorLastName() +
                 "\nNom du client:  " + this.getCustomerLastName() +
-                "\nListe des médicament: " + this.getDrugsQuantityToString() + '}';
+                "\nListe des médicament: " + this.getDrugsQuantityToString();
     }
 
+    /**
+     * TO STRING POUR L ENREGISTREMENT DES PRESCRIPTION EN PDF
+     * @return
+     */
     public String toStringForPdf(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return " // " + this.getPrescriptionDate().format(formatter) +
@@ -178,6 +195,10 @@ public class Prescription {
                 " / Médicaments: " + this.getDrugsQuantityToString();
     }
 
+    /**
+     * L AFFICHAGE DE QUANTITE COMMANDE OU SORTIE DE STOCK
+     * @return String
+     */
     public String getDrugsQuantityToString() {
         String stringToReturn = "";
         for (Map.Entry<Drug,Integer> entry : this.getDrugsQuantityPrescriptionList().entrySet()){
@@ -186,6 +207,10 @@ public class Prescription {
         return stringToReturn;
     }
 
+    /**
+     * SAUVEGARDER UNE PRESCRIPTION EN PDF
+     * @throws IOException
+     */
     public void savePrescriptionAsPdf() throws IOException {
         String pathHistoric = "C:\\Users\\DEV01\\OneDrive - AFPA\\Documents\\ECFjrou\\Sparadrap\\src\\historic\\"
                 + this.getCustomerLastName() + this.prescriptionDate + ".pdf";
@@ -221,6 +246,12 @@ public class Prescription {
         }
     }
 
+    /**
+     * DECOUPE LE TEXTE DES PRESCRIPTION EN LIGNE POUR L ENRGISTREMENT PDF
+     * @param text String
+     * @param lineMax int
+     * @return List
+     */
     public static List<String> sliceTextForPdf(String text, int lineMax){
         List<String> stringToReturn = new ArrayList<>();
         int index = 0;
@@ -233,19 +264,24 @@ public class Prescription {
         return stringToReturn;
     }
 
+    /**
+     * OUVRE UNE PRESCRIPTION PDF
+     */
     public void openPdfPrescription(){
-        try{
+        try {
             File pdfFile = new File(this.pathPdf);
-            if(pdfFile.exists()){
-                if(Desktop.isDesktopSupported()){
+            if (pdfFile.exists()) {
+                if (Desktop.isDesktopSupported()) {
                     Desktop.getDesktop().open(pdfFile);
-                }else{
+                } else {
                     Display.error("Desktop n'est pas supporté");
                 }
-            }else{
-                Display.error("Le fichier n'existe pas");
             }
-        }catch(IOException ioe){
+        } catch(NullPointerException npe){
+                    Display.error("Le fichier n'existe pas");
+                    JOptionPane.showMessageDialog(null, "Le fichier n'existe pas", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+        catch(IOException ioe){
             ioe.printStackTrace();
         }
     }

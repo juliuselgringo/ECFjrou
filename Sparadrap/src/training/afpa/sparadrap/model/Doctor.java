@@ -135,17 +135,16 @@ public class Doctor extends Person {
     public static String[][] createDoctorsMatrice(){
         String[][] matrices = new String[doctorsList.size()][5];
         int i = 0;
-        for (Doctor doctor : doctorsList) {
-            matrices[i][0] = doctor.getFirstName();
-            matrices[i][1] = doctor.getLastName();
-            matrices[i][2] = doctor.getAgreementId();
-            try {
+        try {
+            for (Doctor doctor : doctorsList) {
+                matrices[i][0] = doctor.getFirstName();
+                matrices[i][1] = doctor.getLastName();
+                matrices[i][2] = doctor.getAgreementId();
                 matrices[i][3] = doctor.getContact().getPhone();
                 matrices[i][4] = doctor.getContact().getEmail();
-            }catch(NullPointerException npe){};
-
-            i++;
-        }
+                i++;
+            }
+        }catch(NullPointerException npe){};
         return matrices;
     }
 

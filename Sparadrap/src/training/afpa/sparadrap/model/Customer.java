@@ -17,7 +17,6 @@ public class Customer extends Person {
     private Doctor doctor;
     private ArrayList<Prescription> customerPrescriptionsList = new ArrayList();
 
-    private static final String regexSocialSecurityId = "\\d{15}";
     public static ArrayList<Customer> customersList = new ArrayList<>();
 
     /**
@@ -78,6 +77,7 @@ public class Customer extends Person {
      */
     public void setSocialSecurityId(String socialSecurityId) throws InputException {
         socialSecurityId = socialSecurityId.trim();
+        final String regexSocialSecurityId = "\\d{15}";
         if (socialSecurityId.isEmpty() || socialSecurityId == null) {
             throw new InputException("Le n° de sécurité sociale ne peut être vide ou nul");
         } else if (!socialSecurityId.matches(regexSocialSecurityId)) {
@@ -208,29 +208,36 @@ public class Customer extends Person {
         String[][] matrices = new String[customersList.size()][6];
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         int i = 0;
-        for (Customer customer : customersList) {
-            matrices[i][0] = customer.getFirstName();
-            matrices[i][1] = customer.getLastName();
-            matrices[i][2] = customer.getDateOfBirth().format(formatter);
-            matrices[i][3] = customer.getContact().getPhone();
-            matrices[i][4] = customer.getMutual().getName() + " " + customer.getMutual().getContact().getPostalCode();
-            matrices[i][5] = customer.getDoctor().getLastName() + " " + customer.getDoctor().getContact().getPostalCode();
-            i++;
-        }
+        try {
+            for (Customer customer : customersList) {
+                matrices[i][0] = customer.getFirstName();
+                matrices[i][1] = customer.getLastName();
+                matrices[i][2] = customer.getDateOfBirth().format(formatter);
+                matrices[i][3] = customer.getContact().getPhone();
+                matrices[i][4] = customer.getMutual().getName() + " " + customer.getMutual().getContact().getPostalCode();
+                matrices[i][5] = customer.getDoctor().getLastName() + " " + customer.getDoctor().getContact().getPostalCode();
+                i++;
+            }
+        }catch(NullPointerException npe){};
         return matrices;
     }
 
     /**
      * RECHERCHER UN CLIENT PAR SON NOM DE FAMILLE
-     * @param lastName
-     * @return
+     * @param lastName String
+     * @return Customer
      */
-    public static Customer getCustomerByLastName(String lastName){
+    public static Customer getCustomerByLastName(String lastName) throws InputException {
         Customer customerToReturn = null;
-        for (Customer customer : customersList) {
-            if (customer.getLastName().equals(lastName)){
-                customerToReturn = customer;
+        try {
+            for (Customer customer : customersList) {
+                if (customer.getLastName().equals(lastName)) {
+                    customerToReturn = customer;
+                }
             }
+        }catch(NullPointerException npe){};
+        if(customerToReturn == null){
+            throw new InputException("Ce client n'est pas enregistré");
         }
         return customerToReturn;
     }

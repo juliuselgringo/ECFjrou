@@ -251,7 +251,7 @@ public class Drug {
 
     /**
      * TO STRING SANS RETOUR CHARIOT POUR LE PDF
-     * @return
+     * @return String
      */
     public String toStringForPdf(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");

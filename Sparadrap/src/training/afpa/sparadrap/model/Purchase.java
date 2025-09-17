@@ -54,6 +54,10 @@ public class Purchase {
         return purchaseDate;
     }
 
+    /**
+     * SETTER purchaseDate
+     * @param purchaseDate
+     */
     public  void setPurchaseDate(String purchaseDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         this.purchaseDate = LocalDate.parse(purchaseDate, formatter);

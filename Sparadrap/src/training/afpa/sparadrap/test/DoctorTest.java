@@ -91,7 +91,7 @@ class DoctorTest {
 
     @Test
     public void createDoctorsMatrice_ValidInput() throws InputException {
-
+        Doctor.doctorsList.clear();
         Contact jeDup75 = new Contact("12 Rue de Paris", "75000", "Paris",
                 "01 23 45 67 89", "jean.dupont@medecin.fr");
         Doctor testDoctor = new Doctor("Jean", "Dupont", jeDup75,"12345678901");

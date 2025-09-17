@@ -5,6 +5,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.model.Contact;
+import training.afpa.sparadrap.model.Customer;
+import training.afpa.sparadrap.model.Doctor;
 import training.afpa.sparadrap.model.Mutual;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +27,7 @@ class MutualTest {
         assertEquals("Machin", test.getContact().getTown());
         assertEquals("00 00 00 00 00", test.getContact().getPhone());
         assertEquals("ma@chin.fr", test.getContact().getEmail());
-
+        assertEquals(0.4, test.getRate());
     }
 
     @ParameterizedTest(name="{0} le setter lève correctemnt l exception")
@@ -40,6 +42,20 @@ class MutualTest {
         assertThrows(InputException.class, () -> test.setRate(input));
     }
 
+    @Test
+    public void getMutualCustomersListMatrice_ValidInput() throws InputException {
+        Contact contact = new Contact();
+        Doctor doctor = new Doctor();
+        Mutual test = new Mutual("Test",contact,0.4);
+        Customer customer = new Customer("Machin","Test", contact,"123456789012345", "12-01-1995", test, doctor);
+        assertEquals("Test", test.getMutualCustomersListMatrice()[0][0]);
+    }
 
+    @Test
+    public void emptyConstructor_setContact_ValidInput() throws InputException {
+        Mutual test = new Mutual();
+        Contact contact = new Contact();
+        test.setContact(contact);
+    }
 
 }

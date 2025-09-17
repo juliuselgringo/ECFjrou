@@ -8,9 +8,6 @@ public class Person {
     private String lastName;
     private Contact contact;
 
-    private final String regexFirstName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?";
-    private final String regexLastName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?";
-
     /**
      * CONSTURCTOR
      * @param firstName String
@@ -42,6 +39,7 @@ public class Person {
      * @throws InputException
      */
     public void setFirstName(String firstName) throws InputException {
+        final String regexFirstName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?";
         firstName = firstName.trim();
         if(firstName == null || firstName.isEmpty()) {
             throw new InputException("Le prénom ne peut être vide ou null");
@@ -68,6 +66,7 @@ public class Person {
      * @throws InputException
      */
     public void setLastName(String lastName) throws InputException {
+        final String regexLastName = "[A-Z][a-z]+([\s][A-Z][a-z]+)?";
         lastName = lastName.trim();
         if(lastName == null || lastName.isEmpty()) {
             throw  new InputException("Le nom ne peut être vide ou null");
