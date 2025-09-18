@@ -6,6 +6,7 @@ import training.afpa.sparadrap.utility.Display;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
@@ -43,6 +44,8 @@ public class CustomerSwing {
             try {
                 deleteCustomer(customer, frame);
             } catch (InputException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -255,7 +258,7 @@ public class CustomerSwing {
      * @param customer Customer
      * @throws InputException
      */
-    public static void deleteCustomer(Customer customer, JFrame frame1) throws InputException {
+    public static void deleteCustomer(Customer customer, JFrame frame1) throws InputException, IOException {
         int resp = JOptionPane.showConfirmDialog(null,
                 "Etes vous sur de vouloir supprimer ce client" + customer.getLastName(),
                 "Confirmation", JOptionPane.YES_NO_OPTION);

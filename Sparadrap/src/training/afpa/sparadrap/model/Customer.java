@@ -3,6 +3,7 @@ package training.afpa.sparadrap.model;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.utility.Display;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -197,8 +198,9 @@ public class Customer extends Person implements Serializable {
     /**
      * SUPPRIMER UN CLIENT
      */
-    public void deleteCustomer(){
+    public void deleteCustomer() throws IOException {
         customersList.remove(this);
+        DataSave.serialization();
     }
 
     /**

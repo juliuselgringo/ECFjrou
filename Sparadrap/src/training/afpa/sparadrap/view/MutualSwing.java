@@ -52,6 +52,8 @@ public class MutualSwing {
                     deleteMutual(mutual,frame);
                 } catch (InputException ex) {
                     throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });
@@ -205,7 +207,7 @@ public class MutualSwing {
      * @param frame JFrame
      * @throws InputException
      */
-    public static void deleteMutual(Mutual mutual,JFrame frame) throws InputException {
+    public static void deleteMutual(Mutual mutual,JFrame frame) throws InputException, IOException {
         int resp = JOptionPane.showConfirmDialog(null,"Etes vous sur de vouloir supprimer cette mutuelle?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) {
             Mutual.mutualsList.remove(mutual);
@@ -213,6 +215,7 @@ public class MutualSwing {
             frame.dispose();
             mutualMenu();
         }
+        DataSave.serialization();
         frame.dispose();
         mutualMenu();
     }

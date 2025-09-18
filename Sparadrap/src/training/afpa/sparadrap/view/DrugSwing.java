@@ -176,6 +176,7 @@ public class DrugSwing {
             frame.dispose();
             drugMenu();
         }
+
         frame.dispose();
         drugMenu();
     }

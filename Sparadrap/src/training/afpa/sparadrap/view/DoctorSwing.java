@@ -48,6 +48,8 @@ public class DoctorSwing {
                 deleteDoctor(doctor, frame);
             } catch (InputException e) {
                 throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
 
@@ -223,7 +225,7 @@ public class DoctorSwing {
      * @param doctor Doctor
      * @throws InputException
      */
-    public static void deleteDoctor(Doctor doctor, JFrame frame1) throws InputException {
+    public static void deleteDoctor(Doctor doctor, JFrame frame1) throws InputException, IOException {
         int resp = JOptionPane.showConfirmDialog(null,
                 "Etes vous sur de vouloir supprimer ce médecin" + doctor.getLastName(),
                 "Confirmation", JOptionPane.YES_NO_OPTION);
@@ -232,6 +234,7 @@ public class DoctorSwing {
             JOptionPane.showMessageDialog(null, "Le médecin a été supprimé avec succès.",
                     "Succès",JOptionPane.INFORMATION_MESSAGE);
         }
+        DataSave.serialization();
         frame1.dispose();
         doctorMenu();
     }

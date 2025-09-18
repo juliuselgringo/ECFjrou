@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.model.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -93,7 +94,7 @@ class CustomerTest {
     }
 
     @Test
-    public void deleteCustomer_getCustomerByLastName_() throws InputException {
+    public void deleteCustomer_getCustomerByLastName_() throws InputException, IOException {
         Customer customerToDelete = new Customer();
         customerToDelete.setLastName("Papa");
         customerToDelete.deleteCustomer();

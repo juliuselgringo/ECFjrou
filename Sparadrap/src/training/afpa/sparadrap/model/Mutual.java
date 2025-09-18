@@ -116,17 +116,20 @@ public class Mutual implements Serializable {
     public static String[][] createMutualMatrice(){
         String[][] matrice = new String[Mutual.mutualsList.size()][7];
         int i = 0;
-        for(Mutual mutual : Mutual.mutualsList){
-            matrice[i][0] = mutual.getName();
-            matrice[i][1] = mutual.getContact().getAddress();
-            matrice[i][2] = mutual.getContact().getPostalCode();
-            matrice[i][3] = mutual.getContact().getTown();
-            matrice[i][4] = mutual.getContact().getPhone();
-            matrice[i][5] = mutual.getContact().getEmail();
-            matrice[i][6] = mutual.getRate().toString();
+        try {
+            for (Mutual mutual : Mutual.mutualsList) {
+                matrice[i][0] = mutual.getName();
+                matrice[i][1] = mutual.getContact().getAddress();
+                matrice[i][2] = mutual.getContact().getPostalCode();
+                matrice[i][3] = mutual.getContact().getTown();
+                matrice[i][4] = mutual.getContact().getPhone();
+                matrice[i][5] = mutual.getContact().getEmail();
+                matrice[i][6] = mutual.getRate().toString();
 
-            i++;
-        }
+                i++;
+            }
+        }catch(Exception e) {}
+
         return matrice;
     }
 
