@@ -199,18 +199,17 @@ public class PurchaseSwing {
      */
     public static void createDisplayPurchaseDrugs(JPanel panel, Purchase newPurchase) {
         newPurchase.setPurchaseDetails();
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String[][] display = newPurchase.getPurchaseDetails();
         Gui.tableMaker(panel,display,purchaseHistoryTableHeaders,500,100,800,300);
 
         newPurchase.setTotalPrice();
         JTextField priceField = Gui.textFieldMaker(panel,500,450);
-        priceField.setText("Prix Total : " +newPurchase.getTotalPrice() + " €");
+        priceField.setText("Prix Total : " + decimalFormat.format(newPurchase.getTotalPrice()) + " €");
         priceField.setEditable(false);
 
         if(newPurchase.getWithPrescription()) {
             Double pricePostMutualRate = newPurchase.getTotalPrice() * (1 - getMutualRateByPrescription(newPurchase.getPrescription()));
-            DecimalFormat decimalFormat = new DecimalFormat("#.##");
-
             JTextField priceFieldPostMutualRate = Gui.textFieldMaker(panel, 500, 480);
             priceFieldPostMutualRate.setText("Prix Total après déduction mutuelle : " +
                     decimalFormat.format(pricePostMutualRate) + " €");
