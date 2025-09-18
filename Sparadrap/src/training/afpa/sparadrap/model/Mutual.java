@@ -2,9 +2,10 @@ package training.afpa.sparadrap.model;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Mutual {
+public class Mutual implements Serializable {
 
     private String name;
     private Contact contact;
@@ -134,7 +135,7 @@ public class Mutual {
      * @return
      */
     public String[][] getMutualCustomersListMatrice(){
-        String[][] matrice = new String[Mutual.mutualsList.size()][5];
+        String[][] matrice = new String[this.mutualCustomersList.size()][5];
         int i = 0;
         for(Customer customer : this.mutualCustomersList){
             matrice[i][0] = customer.getLastName();

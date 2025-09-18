@@ -6,6 +6,7 @@ import training.afpa.sparadrap.ExceptionTracking.InputException;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -22,7 +23,7 @@ import training.afpa.sparadrap.utility.Display;
 import java.io.File;
 import java.io.IOException;
 
-public class Prescription {
+public class Prescription implements Serializable{
 
     private LocalDate prescriptionDate;
     private String doctorLastName;

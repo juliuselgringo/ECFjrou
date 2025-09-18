@@ -1,12 +1,11 @@
 package training.afpa.sparadrap.view;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
-import training.afpa.sparadrap.model.Contact;
-import training.afpa.sparadrap.model.Drug;
-import training.afpa.sparadrap.model.Mutual;
+import training.afpa.sparadrap.model.*;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
@@ -187,11 +186,14 @@ public class MutualSwing {
                 mutual.setRate(Double.parseDouble(rateField.getText()));
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
+                DataSave.serialization();
                 frame.dispose();
                 frame1.dispose();
                 mutualMenu();
             } catch (InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
         });
@@ -237,12 +239,37 @@ public class MutualSwing {
         JPanel panel = Gui.setPanel(frame);
 
         String[] header = {"Nom", "Prénom", "N° Secu", "Email", "Téléphone"};
-        Gui.tableMaker(panel, mutual.getMutualCustomersListMatrice(), header,10,10,700,300);
+        JTable table = Gui.tableMaker(panel, mutual.getMutualCustomersListMatrice(), header,10,10,700,300);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JButton back2Button = Gui.buttonMaker(panel,"Retour",340);
+        JButton deleteButton = Gui.buttonMaker(panel,"Supprimer un client de la liste",340);
+        deleteButton.addActionListener(ev -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0) {
+                Customer customer = mutual.mutualCustomersList.get(selectedRow);
+                int resp = JOptionPane.showConfirmDialog(null,"Etes vous sur de vouloir supprimer le client de cette mutuelle?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (resp == JOptionPane.YES_OPTION) {
+                    mutual.mutualCustomersList.remove(customer);
+                    JOptionPane.showMessageDialog(null,"Le client a été retiré de la liste","Information", JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
+                    try {
+                        displayMutualCustomersList(mutual);
+                    } catch (InputException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                try {
+                    DataSave.serialization();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        JButton back2Button = Gui.buttonMaker(panel,"Retour",400);
         back2Button.addActionListener(ev -> frame.dispose());
 
-        JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 370);
+        JButton exitButton2 = Gui.buttonMaker(panel, "Quitter", 430);
         exitButton2.addActionListener(eve -> System.exit(0));
     }
 }

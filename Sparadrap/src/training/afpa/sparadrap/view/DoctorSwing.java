@@ -2,11 +2,13 @@ package training.afpa.sparadrap.view;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.model.Contact;
+import training.afpa.sparadrap.model.DataSave;
 import training.afpa.sparadrap.model.Doctor;
 import training.afpa.sparadrap.model.Prescription;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -191,11 +193,14 @@ public class DoctorSwing {
                 Doctor.doctorsList.sort(Comparator.comparing(Doctor::getLastName));
                 JOptionPane.showMessageDialog(null, "Vos modification ont bien été enregitré",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
+                DataSave.serialization();
                 frame.dispose();
                 frame1.dispose();
                 doctorMenu();
             } catch (InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Erreur", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
         });

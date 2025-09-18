@@ -5,10 +5,13 @@ import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.model.*;
 import training.afpa.sparadrap.view.ProgramSwing;
 
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) throws InputException {
-        Main.developpmentDataInput();
+    public static void main(String[] args) throws InputException, IOException {
+        //Main.developpmentDataInput();
+        DataSave.deserialization();
         ProgramSwing.generalMenu();
 
     }

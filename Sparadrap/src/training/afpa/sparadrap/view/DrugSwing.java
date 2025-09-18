@@ -1,10 +1,12 @@
 package training.afpa.sparadrap.view;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
+import training.afpa.sparadrap.model.DataSave;
 import training.afpa.sparadrap.model.Drug;
 import training.afpa.sparadrap.utility.Gui;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
@@ -109,7 +111,7 @@ public class DrugSwing {
         JTextField quantityField = Gui.textFieldMaker(panel,400,160);
         quantityField.setText(((Integer)drug.getQuantity()).toString());
 
-        Gui.labelMaker(panel,"Sous prescription ",10,190);
+        Gui.labelMaker(panel,"Sous prescription (true ou false)",10,190);
         JTextField isUnderPrescriptionField = Gui.textFieldMaker(panel,10,220);
         try {
             isUnderPrescriptionField.setText(drug.isUnderPrescription().toString());
@@ -146,11 +148,14 @@ public class DrugSwing {
                 Drug.drugsList.sort(Comparator.comparing(Drug::getName));
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
+                DataSave.serialization();
                 frame.dispose();
                 frame1.dispose();
                 drugMenu();
             } catch (InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
         });

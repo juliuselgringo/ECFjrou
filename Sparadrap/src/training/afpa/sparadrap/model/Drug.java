@@ -2,6 +2,7 @@ package training.afpa.sparadrap.model;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class Drug {
+public class Drug implements Serializable {
 
     private String name;
     private String categoryName;

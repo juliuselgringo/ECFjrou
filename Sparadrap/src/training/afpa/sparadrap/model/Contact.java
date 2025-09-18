@@ -2,7 +2,9 @@ package training.afpa.sparadrap.model;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
-public class Contact {
+import java.io.Serializable;
+
+public class Contact implements Serializable {
 
     private String address;
     private String postalCode;

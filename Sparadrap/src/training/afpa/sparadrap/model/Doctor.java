@@ -2,11 +2,12 @@ package training.afpa.sparadrap.model;
 
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Doctor extends Person {
+public class Doctor extends Person implements Serializable {
 
     private String agreementId;
     private ArrayList<Customer> doctorCustomersList = new ArrayList<>();

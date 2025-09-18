@@ -1,5 +1,6 @@
 package training.afpa.sparadrap.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Purchase {
+public class Purchase implements Serializable {
 
     private LocalDate purchaseDate;
     private Integer purchaseNumber;

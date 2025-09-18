@@ -209,18 +209,26 @@ public class CustomerSwing {
                 customer.setLastName(lastNameField.getText());
                 customer.setDateOfBirth(birthField.getText());
                 customer.setSocialSecurityId(secuField.getText());
+                if(type.equals("modify")) {
+                    customer.getMutual().mutualCustomersList.remove(customer);
+                }
                 customer.setMutual((Mutual) mutualBox.getSelectedItem());
+                if(type.equals("modify")) {
+                    customer.getDoctor().getDoctorCustomersList().remove(customer);
+                }
                 customer.setDoctor((Doctor) docBox.getSelectedItem());
                 contact.setTown(townField.getText());
                 contact.setPhone(phoneField.getText());
                 contact.setEmail(emailField.getText());
                 contact.setAddress(addressField.getText());
                 contact.setPostalCode(postalField.getText());
+
                 JOptionPane.showMessageDialog(null,"Vos modification ont bien été enregitré",
                         "Success",JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
                 frame1.dispose();
                 Customer.customersList.sort(Comparator.comparing(Customer::getLastName));
+                DataSave.serialization();
                 customerMenu();
             }catch(InputException ie) {
                 JOptionPane.showMessageDialog(null, ie.getMessage(),"Erreur",JOptionPane.INFORMATION_MESSAGE);

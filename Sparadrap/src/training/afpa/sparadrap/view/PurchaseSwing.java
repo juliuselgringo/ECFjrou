@@ -144,6 +144,11 @@ public class PurchaseSwing {
                 }
             }
             JOptionPane.showMessageDialog(null, "La commande a été enregistré avec succès");
+            try {
+                DataSave.serialization();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             frame.dispose();
         });
 

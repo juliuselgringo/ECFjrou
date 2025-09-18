@@ -3,13 +3,14 @@ package training.afpa.sparadrap.model;
 import training.afpa.sparadrap.ExceptionTracking.InputException;
 import training.afpa.sparadrap.utility.Display;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Customer extends Person {
+public class Customer extends Person implements Serializable {
 
     private String socialSecurityId;
     private LocalDate dateOfBirth;
