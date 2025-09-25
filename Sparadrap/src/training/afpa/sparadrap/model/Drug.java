@@ -18,6 +18,9 @@ public class Drug implements Serializable {
     private LocalDate productionDate;
     private int quantity;
     private Boolean underPrescription;
+    
+    // totalOut permet d'avoir dans historySwing la somme des sorties d'une période pour la gestion de stock
+    // (displayPurchasesQuantityByPeriod(LocalDate startDate, LocalDate endDate))
     private Integer totalOut = 0;
 
     private final String regexName = "[A-Z][a-z]+([\\s][A-Z][a-z]+)?([\\s][0-9]+)?";
